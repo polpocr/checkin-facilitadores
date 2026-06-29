@@ -23,7 +23,6 @@ type PersonaForm = {
   documento: string
   contacto: string
   coordinadorFacilitador: boolean
-  falta: SiNoValue
   carreraCrecimiento: SiNoValue
   llevoGrupoConexion: SiNoValue
   parejaNombre: string
@@ -37,7 +36,6 @@ const emptyForm = (): PersonaForm => ({
   documento: '',
   contacto: '',
   coordinadorFacilitador: false,
-  falta: '',
   carreraCrecimiento: '',
   llevoGrupoConexion: '',
   parejaNombre: '',
@@ -78,7 +76,6 @@ function formToPayload(form: PersonaForm, editing: boolean) {
     coordinadorFacilitador: editing
       ? form.coordinadorFacilitador
       : form.coordinadorFacilitador || undefined,
-    falta: optionalBoolean(form.falta),
     carreraCrecimiento: optionalBoolean(form.carreraCrecimiento),
     llevoGrupoConexion: optionalBoolean(form.llevoGrupoConexion),
     parejaNombre: form.parejaNombre,
@@ -136,7 +133,6 @@ export default function PersonasAdminPage() {
       } else {
         await create({
           ...payload,
-          falta: payload.falta ?? undefined,
           carreraCrecimiento: payload.carreraCrecimiento ?? undefined,
           llevoGrupoConexion: payload.llevoGrupoConexion ?? undefined,
           parejaFalta: payload.parejaFalta ?? undefined,
@@ -205,12 +201,6 @@ export default function PersonasAdminPage() {
             </Label>
           </div>
           <SiNoSelect
-            id="falta"
-            label="Falta"
-            value={form.falta}
-            onChange={(falta) => setForm({ ...form, falta })}
-          />
-          <SiNoSelect
             id="carreraCrecimiento"
             label="Carrera crecimiento"
             value={form.carreraCrecimiento}
@@ -276,7 +266,6 @@ export default function PersonasAdminPage() {
                 <TableHead>Documento</TableHead>
                 <TableHead>Contacto</TableHead>
                 <TableHead>Coord./Fac.</TableHead>
-                <TableHead>Falta</TableHead>
                 <TableHead>Carrera</TableHead>
                 <TableHead>G. Conexión</TableHead>
                 <TableHead>Pareja</TableHead>
@@ -293,7 +282,6 @@ export default function PersonasAdminPage() {
                   <TableCell>{p.documento}</TableCell>
                   <TableCell>{p.contacto ?? '—'}</TableCell>
                   <TableCell>{p.coordinadorFacilitador ? 'Sí' : '—'}</TableCell>
-                  <TableCell>{formatSiNo(p.falta)}</TableCell>
                   <TableCell>{formatSiNo(p.carreraCrecimiento)}</TableCell>
                   <TableCell>{formatSiNo(p.llevoGrupoConexion)}</TableCell>
                   <TableCell>{p.parejaNombre ?? '—'}</TableCell>
@@ -311,7 +299,6 @@ export default function PersonasAdminPage() {
                           documento: p.documento,
                           contacto: p.contacto ?? '',
                           coordinadorFacilitador: p.coordinadorFacilitador ?? false,
-                          falta: siNoFromBoolean(p.falta),
                           carreraCrecimiento: siNoFromBoolean(p.carreraCrecimiento),
                           llevoGrupoConexion: siNoFromBoolean(p.llevoGrupoConexion),
                           parejaNombre: p.parejaNombre ?? '',

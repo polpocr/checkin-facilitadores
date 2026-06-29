@@ -45,19 +45,30 @@ export async function personaParticipatesInCheckin(
   return false
 }
 
-/** True when the check-in titular's linked partner appears as integrante. */
-export async function checkinIncludesLinkedPartner(
-  ctx: Ctx,
-  checkinPersona: Doc<'personas'>,
-  checkinId: Id<'checkins'>,
-): Promise<boolean> {
-  const parejaPersonaId = checkinPersona.parejaPersonaId
-  if (!parejaPersonaId) return false
+/** Linked pairs where both partners have their own check-in row. */
+export function countParejasConCheckinPropio(
+  personas: Doc<'personas'>[],
+  checkedInPersonaIds: Set<string>,
+) {
+  const counted = new Set<string>()
+  let parejasConCheckinMutuo = 0
+  let totalParejasVinculadas = 0
 
-  const pareja = await ctx.db.get(parejaPersonaId)
-  if (!pareja) return false
+  for (const p of personas) {
+    const parejaId = p.parejaPersonaId
+    if (!parejaId) continue
 
-  return personaParticipatesInCheckin(ctx, pareja, checkinId)
+    const pairKey = [p._id, parejaId].sort().join(':')
+    if (counted.has(pairKey)) continue
+    counted.add(pairKey)
+    totalParejasVinculadas++
+
+    if (checkedInPersonaIds.has(p._id) && checkedInPersonaIds.has(parejaId)) {
+      parejasConCheckinMutuo++
+    }
+  }
+
+  return { parejasConCheckinMutuo, totalParejasVinculadas }
 }
 
 /** Blocks duplicate check-in: own record, or listed in pareja's grupos. */

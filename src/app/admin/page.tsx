@@ -85,8 +85,8 @@ export default function AdminDashboardPage() {
         />
         <KpiCard
           title="Check-in de pareja"
-          value={kpis.checkinsConPareja}
-          subtitle={`${kpis.porcentajeCheckinsConPareja}% de check-ins`}
+          value={kpis.parejasConCheckinMutuo}
+          subtitle={`${kpis.porcentajeParejasConCheckinMutuo}% de parejas vinculadas`}
           href="/admin/checkins"
           icon={HeartHandshake}
         />
