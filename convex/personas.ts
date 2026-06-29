@@ -2,7 +2,10 @@ import { mutation, query } from './_generated/server'
 import { ConvexError, v } from 'convex/values'
 import type { Doc } from './_generated/dataModel'
 import { requireAdmin, requireOperador } from './lib/authorization'
-import { findEffectiveCheckin } from './lib/checkinPair'
+import {
+  findBlockingCheckin,
+  personaMatchesIntegranteNombre,
+} from './lib/checkinPair'
 
 function normalizeDocumento(documento: string) {
   return documento.trim().toLowerCase()
@@ -43,7 +46,7 @@ export const getCheckinStatus = query({
   args: { personaId: v.id('personas') },
   handler: async (ctx, args) => {
     await requireOperador(ctx)
-    const effective = await findEffectiveCheckin(ctx, args.personaId)
+    const effective = await findBlockingCheckin(ctx, args.personaId)
 
     if (!effective) {
       const persona = await ctx.db.get(args.personaId)
@@ -63,20 +66,30 @@ export const getCheckinStatus = query({
       }
     }
 
+    const persona = await ctx.db.get(args.personaId)
     const viaPersona = await ctx.db.get(effective.viaPersonaId)
-    const grupos = await ctx.db
+    const allGrupos = await ctx.db
       .query('grupos')
       .withIndex('by_checkin', (q) => q.eq('checkinId', effective.checkin._id))
       .collect()
 
     const integrantesByGrupo: Record<string, Doc<'integrantes'>[]> = {}
-    for (const grupo of grupos) {
+    for (const grupo of allGrupos) {
       const integrantes = await ctx.db
         .query('integrantes')
         .withIndex('by_grupo', (q) => q.eq('grupoId', grupo._id))
         .collect()
       integrantesByGrupo[grupo._id] = integrantes
     }
+
+    const grupos =
+      effective.viaPareja && persona
+        ? allGrupos.filter((grupo) =>
+            (integrantesByGrupo[grupo._id] ?? []).some((i) =>
+              personaMatchesIntegranteNombre(persona, i.nombre),
+            ),
+          )
+        : allGrupos
 
     return {
       hasCheckin: true as const,
@@ -207,7 +220,7 @@ export const remove = mutation({
   args: { id: v.id('personas') },
   handler: async (ctx, args) => {
     await requireAdmin(ctx)
-    const effective = await findEffectiveCheckin(ctx, args.id)
+    const effective = await findBlockingCheckin(ctx, args.id)
     if (effective) throw new ConvexError('No se puede eliminar: tiene check-in registrado')
 
     const persona = await ctx.db.get(args.id)

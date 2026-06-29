@@ -3,7 +3,7 @@ import type { MutationCtx } from './_generated/server'
 import { ConvexError, v } from 'convex/values'
 import { requireAdmin, requireOperador } from './lib/authorization'
 import type { Doc, Id } from './_generated/dataModel'
-import { findEffectiveCheckin } from './lib/checkinPair'
+import { findBlockingCheckin, findEffectiveCheckin } from './lib/checkinPair'
 import { resolveGrupoNombre } from './lib/grupoProvisionalName'
 
 const grupoInput = v.object({
@@ -65,7 +65,7 @@ export const createWithGrupos = mutation({
       throw new ConvexError('Debe capturar exactamente la cantidad de grupos seleccionada')
     }
 
-    const existing = await findEffectiveCheckin(ctx, args.personaId)
+    const existing = await findBlockingCheckin(ctx, args.personaId)
     if (existing) {
       const via = await ctx.db.get(existing.viaPersonaId)
       const msg = existing.viaPareja
