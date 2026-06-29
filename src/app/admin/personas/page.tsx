@@ -27,6 +27,8 @@ export default function PersonasAdminPage() {
     documento: '',
     contacto: '',
     parejaNombre: '',
+    parejaDocumento: '',
+    parejaContacto: '',
   })
   const [editingId, setEditingId] = useState<Id<'personas'> | null>(null)
 
@@ -40,7 +42,14 @@ export default function PersonasAdminPage() {
         await create(form)
         toast.success('Persona creada')
       }
-      setForm({ nombreCompleto: '', documento: '', contacto: '', parejaNombre: '' })
+      setForm({
+        nombreCompleto: '',
+        documento: '',
+        contacto: '',
+        parejaNombre: '',
+        parejaDocumento: '',
+        parejaContacto: '',
+      })
       setEditingId(null)
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Error')
@@ -49,7 +58,14 @@ export default function PersonasAdminPage() {
 
   function cancelEdit() {
     setEditingId(null)
-    setForm({ nombreCompleto: '', documento: '', contacto: '', parejaNombre: '' })
+    setForm({
+      nombreCompleto: '',
+      documento: '',
+      contacto: '',
+      parejaNombre: '',
+      parejaDocumento: '',
+      parejaContacto: '',
+    })
   }
 
   return (
@@ -95,6 +111,20 @@ export default function PersonasAdminPage() {
               onChange={(e) => setForm({ ...form, parejaNombre: e.target.value })}
             />
           </div>
+          <div className="space-y-2">
+            <Label>Cédula de la pareja</Label>
+            <Input
+              value={form.parejaDocumento}
+              onChange={(e) => setForm({ ...form, parejaDocumento: e.target.value })}
+            />
+          </div>
+          <div className="space-y-2">
+            <Label>Número de la pareja</Label>
+            <Input
+              value={form.parejaContacto}
+              onChange={(e) => setForm({ ...form, parejaContacto: e.target.value })}
+            />
+          </div>
           <div className="flex gap-2 md:col-span-2">
             <Button type="submit">{editingId ? 'Actualizar' : 'Crear'}</Button>
             {editingId && (
@@ -119,6 +149,8 @@ export default function PersonasAdminPage() {
                 <TableHead>Documento</TableHead>
                 <TableHead>Contacto</TableHead>
                 <TableHead>Pareja</TableHead>
+                <TableHead>Cédula pareja</TableHead>
+                <TableHead>Número pareja</TableHead>
                 <TableHead className="text-right">Acciones</TableHead>
               </TableRow>
             </TableHeader>
@@ -129,6 +161,8 @@ export default function PersonasAdminPage() {
                   <TableCell>{p.documento}</TableCell>
                   <TableCell>{p.contacto ?? '—'}</TableCell>
                   <TableCell>{p.parejaNombre ?? '—'}</TableCell>
+                  <TableCell>{p.parejaDocumento ?? '—'}</TableCell>
+                  <TableCell>{p.parejaContacto ?? '—'}</TableCell>
                   <TableCell className="space-x-2 text-right">
                     <Button
                       size="sm"
@@ -140,6 +174,8 @@ export default function PersonasAdminPage() {
                           documento: p.documento,
                           contacto: p.contacto ?? '',
                           parejaNombre: p.parejaNombre ?? '',
+                          parejaDocumento: p.parejaDocumento ?? '',
+                          parejaContacto: p.parejaContacto ?? '',
                         })
                       }}
                     >

@@ -35,6 +35,8 @@ export default defineSchema({
     documento: v.string(),
     contacto: v.optional(v.string()),
     parejaNombre: v.optional(v.string()),
+    parejaDocumento: v.optional(v.string()),
+    parejaContacto: v.optional(v.string()),
     parejaPersonaId: v.optional(v.id('personas')),
     createdAt: v.number(),
     updatedAt: v.number(),

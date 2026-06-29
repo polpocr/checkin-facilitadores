@@ -127,6 +127,8 @@ export const create = mutation({
     documento: v.string(),
     contacto: v.optional(v.string()),
     parejaNombre: v.optional(v.string()),
+    parejaDocumento: v.optional(v.string()),
+    parejaContacto: v.optional(v.string()),
     parejaPersonaId: v.optional(v.id('personas')),
   },
   handler: async (ctx, args) => {
@@ -144,6 +146,8 @@ export const create = mutation({
       documento,
       contacto: args.contacto?.trim() || undefined,
       parejaNombre: args.parejaNombre?.trim() || undefined,
+      parejaDocumento: args.parejaDocumento?.trim() || undefined,
+      parejaContacto: args.parejaContacto?.trim() || undefined,
       parejaPersonaId: args.parejaPersonaId,
       createdAt: now,
       updatedAt: now,
@@ -164,6 +168,8 @@ export const update = mutation({
     documento: v.optional(v.string()),
     contacto: v.optional(v.string()),
     parejaNombre: v.optional(v.string()),
+    parejaDocumento: v.optional(v.string()),
+    parejaContacto: v.optional(v.string()),
     parejaPersonaId: v.optional(v.union(v.id('personas'), v.null())),
   },
   handler: async (ctx, args) => {
@@ -198,6 +204,12 @@ export const update = mutation({
       ...(args.contacto !== undefined ? { contacto: args.contacto.trim() || undefined } : {}),
       ...(args.parejaNombre !== undefined
         ? { parejaNombre: args.parejaNombre.trim() || undefined }
+        : {}),
+      ...(args.parejaDocumento !== undefined
+        ? { parejaDocumento: args.parejaDocumento.trim() || undefined }
+        : {}),
+      ...(args.parejaContacto !== undefined
+        ? { parejaContacto: args.parejaContacto.trim() || undefined }
         : {}),
       ...(args.parejaPersonaId !== undefined
         ? {
