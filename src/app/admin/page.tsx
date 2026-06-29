@@ -9,7 +9,7 @@ import { PageHeader } from '@/components/app/page-header'
 import { SectionCard } from '@/components/app/section-card'
 import { Card, CardContent } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
-import { AlertTriangle, CheckCircle2, ClipboardList, Users } from 'lucide-react'
+import { AlertTriangle, CheckCircle2, ClipboardList, HeartHandshake, Users } from 'lucide-react'
 
 function KpiCard({
   title,
@@ -74,7 +74,7 @@ export default function AdminDashboardPage() {
         description="Monitoreo en tiempo real del registro y grupos del evento"
       />
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
         <KpiCard
           title="Check-ins realizados"
           value={kpis.checkinsRealizados}
@@ -82,6 +82,13 @@ export default function AdminDashboardPage() {
           href="/admin/checkins"
           highlight="success"
           icon={CheckCircle2}
+        />
+        <KpiCard
+          title="Check-in de pareja"
+          value={kpis.checkinsConPareja}
+          subtitle={`${kpis.porcentajeCheckinsConPareja}% de check-ins`}
+          href="/admin/checkins"
+          icon={HeartHandshake}
         />
         <KpiCard
           title="Sin check-in"

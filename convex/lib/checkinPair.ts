@@ -45,6 +45,21 @@ export async function personaParticipatesInCheckin(
   return false
 }
 
+/** True when the check-in titular's linked partner appears as integrante. */
+export async function checkinIncludesLinkedPartner(
+  ctx: Ctx,
+  checkinPersona: Doc<'personas'>,
+  checkinId: Id<'checkins'>,
+): Promise<boolean> {
+  const parejaPersonaId = checkinPersona.parejaPersonaId
+  if (!parejaPersonaId) return false
+
+  const pareja = await ctx.db.get(parejaPersonaId)
+  if (!pareja) return false
+
+  return personaParticipatesInCheckin(ctx, pareja, checkinId)
+}
+
 /** Blocks duplicate check-in: own record, or listed in pareja's grupos. */
 export async function findBlockingCheckin(
   ctx: Ctx,

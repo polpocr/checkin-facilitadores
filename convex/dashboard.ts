@@ -1,6 +1,6 @@
 import { query } from './_generated/server'
 import { requireAdmin } from './lib/authorization'
-import { isPersonaCoveredByCheckin } from './lib/checkinPair'
+import { checkinIncludesLinkedPartner, isPersonaCoveredByCheckin } from './lib/checkinPair'
 
 function hourKey(ts: number) {
   const d = new Date(ts)
@@ -38,6 +38,19 @@ export const getKpis = query({
     const porcentajeCheckin =
       totalPersonas === 0 ? 0 : Math.round((personasConCheckin / totalPersonas) * 100)
 
+    const personasById = new Map(personas.map((p) => [p._id, p]))
+    let checkinsConPareja = 0
+    for (const c of checkins) {
+      const titular = personasById.get(c.personaId)
+      if (titular && (await checkinIncludesLinkedPartner(ctx, titular, c._id))) {
+        checkinsConPareja++
+      }
+    }
+    const porcentajeCheckinsConPareja =
+      checkinsRealizados === 0
+        ? 0
+        : Math.round((checkinsConPareja / checkinsRealizados) * 100)
+
     const gruposPorPersona = new Map<string, number>()
     for (const g of grupos) {
       gruposPorPersona.set(g.personaId, (gruposPorPersona.get(g.personaId) ?? 0) + 1)
@@ -70,6 +83,8 @@ export const getKpis = query({
       totalPersonas,
       checkinsRealizados,
       porcentajeCheckin,
+      checkinsConPareja,
+      porcentajeCheckinsConPareja,
       personasSinCheckin,
       totalGrupos: grupos.length,
       conUnGrupo,
