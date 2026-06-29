@@ -13,6 +13,7 @@ import type * as auth from "../auth.js";
 import type * as casosRevision from "../casosRevision.js";
 import type * as checkins from "../checkins.js";
 import type * as dashboard from "../dashboard.js";
+import type * as exportar from "../exportar.js";
 import type * as facilitadores from "../facilitadores.js";
 import type * as grupos from "../grupos.js";
 import type * as http from "../http.js";
@@ -36,6 +37,7 @@ declare const fullApi: ApiFromModules<{
   casosRevision: typeof casosRevision;
   checkins: typeof checkins;
   dashboard: typeof dashboard;
+  exportar: typeof exportar;
   facilitadores: typeof facilitadores;
   grupos: typeof grupos;
   http: typeof http;

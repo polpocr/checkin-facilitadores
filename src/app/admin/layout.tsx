@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { api } from '@convex/_generated/api'
 import { redirect } from 'next/navigation'
 import type { PropsWithChildren } from 'react'
+import { AdminExportButton } from '@/components/app/admin-export-button'
 import { AdminNav } from '@/components/app/admin-nav'
 import { RequireAuthSession } from '@/components/app/require-auth-session'
 import { SignOutButton } from '@/components/app/sign-out-button'
@@ -31,7 +32,10 @@ export default async function AdminLayout({ children }: PropsWithChildren) {
               </Link>
               <p className="text-xs text-muted-foreground">Admin · {profile.fullName ?? profile.email}</p>
             </div>
-            <SignOutButton variant="ghost" size="sm" signInPath="/sign-in?next=/admin" />
+            <div className="flex items-center gap-2">
+              <AdminExportButton />
+              <SignOutButton variant="ghost" size="sm" signInPath="/sign-in?next=/admin" />
+            </div>
           </div>
           <div className="mt-3 overflow-x-auto pb-1">
             <AdminNav />
