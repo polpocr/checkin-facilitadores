@@ -1,0 +1,15 @@
+{
+  /* This tsconfig is used when the Convex CLI typechecks convex/. */
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "skipLibCheck": true,
+    "strict": true,
+    "isolatedModules": true
+  },
+  "include": ["./**/*"],
+  "exclude": ["../node_modules"]
+}
