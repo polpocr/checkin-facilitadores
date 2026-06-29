@@ -133,7 +133,8 @@ export const create = mutation({
     parejaNombre: v.optional(v.string()),
     parejaDocumento: v.optional(v.string()),
     parejaContacto: v.optional(v.string()),
-    parejaFalta: v.optional(v.boolean()),
+    parejaCarreraCrecimiento: v.optional(v.boolean()),
+    parejaLlevoGrupoConexion: v.optional(v.boolean()),
     parejaPersonaId: v.optional(v.id('personas')),
   },
   handler: async (ctx, args) => {
@@ -157,7 +158,8 @@ export const create = mutation({
       parejaNombre: args.parejaNombre?.trim() || undefined,
       parejaDocumento: args.parejaDocumento?.trim() || undefined,
       parejaContacto: args.parejaContacto?.trim() || undefined,
-      parejaFalta: args.parejaFalta,
+      parejaCarreraCrecimiento: args.parejaCarreraCrecimiento,
+      parejaLlevoGrupoConexion: args.parejaLlevoGrupoConexion,
       parejaPersonaId: args.parejaPersonaId,
       createdAt: now,
       updatedAt: now,
@@ -184,7 +186,8 @@ export const update = mutation({
     parejaNombre: v.optional(v.string()),
     parejaDocumento: v.optional(v.string()),
     parejaContacto: v.optional(v.string()),
-    parejaFalta: v.optional(v.union(v.boolean(), v.null())),
+    parejaCarreraCrecimiento: v.optional(v.union(v.boolean(), v.null())),
+    parejaLlevoGrupoConexion: v.optional(v.union(v.boolean(), v.null())),
     parejaPersonaId: v.optional(v.union(v.id('personas'), v.null())),
   },
   handler: async (ctx, args) => {
@@ -236,8 +239,17 @@ export const update = mutation({
       ...(args.parejaContacto !== undefined
         ? { parejaContacto: args.parejaContacto.trim() || undefined }
         : {}),
-      ...(args.parejaFalta !== undefined
-        ? { parejaFalta: args.parejaFalta === null ? undefined : args.parejaFalta }
+      ...(args.parejaCarreraCrecimiento !== undefined
+        ? {
+            parejaCarreraCrecimiento:
+              args.parejaCarreraCrecimiento === null ? undefined : args.parejaCarreraCrecimiento,
+          }
+        : {}),
+      ...(args.parejaLlevoGrupoConexion !== undefined
+        ? {
+            parejaLlevoGrupoConexion:
+              args.parejaLlevoGrupoConexion === null ? undefined : args.parejaLlevoGrupoConexion,
+          }
         : {}),
       ...(args.parejaPersonaId !== undefined
         ? {

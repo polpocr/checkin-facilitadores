@@ -28,7 +28,8 @@ type PersonaForm = {
   parejaNombre: string
   parejaDocumento: string
   parejaContacto: string
-  parejaFalta: SiNoValue
+  parejaCarreraCrecimiento: SiNoValue
+  parejaLlevoGrupoConexion: SiNoValue
 }
 
 const emptyForm = (): PersonaForm => ({
@@ -41,7 +42,8 @@ const emptyForm = (): PersonaForm => ({
   parejaNombre: '',
   parejaDocumento: '',
   parejaContacto: '',
-  parejaFalta: '',
+  parejaCarreraCrecimiento: '',
+  parejaLlevoGrupoConexion: '',
 })
 
 function siNoFromBoolean(value: boolean | undefined): SiNoValue {
@@ -81,7 +83,8 @@ function formToPayload(form: PersonaForm, editing: boolean) {
     parejaNombre: form.parejaNombre,
     parejaDocumento: form.parejaDocumento,
     parejaContacto: form.parejaContacto,
-    parejaFalta: optionalBoolean(form.parejaFalta),
+    parejaCarreraCrecimiento: optionalBoolean(form.parejaCarreraCrecimiento),
+    parejaLlevoGrupoConexion: optionalBoolean(form.parejaLlevoGrupoConexion),
   }
 }
 
@@ -141,7 +144,8 @@ export default function PersonasAdminPage() {
           ...payload,
           carreraCrecimiento: payload.carreraCrecimiento ?? undefined,
           llevoGrupoConexion: payload.llevoGrupoConexion ?? undefined,
-          parejaFalta: payload.parejaFalta ?? undefined,
+          parejaCarreraCrecimiento: payload.parejaCarreraCrecimiento ?? undefined,
+          parejaLlevoGrupoConexion: payload.parejaLlevoGrupoConexion ?? undefined,
         })
         toast.success('Facilitador creado')
       }
@@ -242,10 +246,16 @@ export default function PersonasAdminPage() {
             />
           </div>
           <SiNoSelect
-            id="parejaFalta"
-            label="Falta (pareja)"
-            value={form.parejaFalta}
-            onChange={(parejaFalta) => setForm({ ...form, parejaFalta })}
+            id="parejaCarreraCrecimiento"
+            label="Carrera crecimiento"
+            value={form.parejaCarreraCrecimiento}
+            onChange={(parejaCarreraCrecimiento) => setForm({ ...form, parejaCarreraCrecimiento })}
+          />
+          <SiNoSelect
+            id="parejaLlevoGrupoConexion"
+            label="Grupo Conexión"
+            value={form.parejaLlevoGrupoConexion}
+            onChange={(parejaLlevoGrupoConexion) => setForm({ ...form, parejaLlevoGrupoConexion })}
           />
 
           <div className="flex gap-2 md:col-span-2">
@@ -277,7 +287,8 @@ export default function PersonasAdminPage() {
                 <TableHead>Pareja</TableHead>
                 <TableHead>Cédula pareja</TableHead>
                 <TableHead>Número pareja</TableHead>
-                <TableHead>Falta pareja</TableHead>
+                <TableHead>Carrera pareja</TableHead>
+                <TableHead>G. Conexión pareja</TableHead>
                 <TableHead className="text-right">Acciones</TableHead>
               </TableRow>
             </TableHeader>
@@ -293,7 +304,8 @@ export default function PersonasAdminPage() {
                   <TableCell>{p.parejaNombre ?? '—'}</TableCell>
                   <TableCell>{p.parejaDocumento ?? '—'}</TableCell>
                   <TableCell>{p.parejaContacto ?? '—'}</TableCell>
-                  <TableCell>{formatSiNo(p.parejaFalta)}</TableCell>
+                  <TableCell>{formatSiNo(p.parejaCarreraCrecimiento)}</TableCell>
+                  <TableCell>{formatSiNo(p.parejaLlevoGrupoConexion)}</TableCell>
                   <TableCell className="space-x-2 text-right">
                     <Button
                       size="sm"
@@ -310,7 +322,8 @@ export default function PersonasAdminPage() {
                           parejaNombre: p.parejaNombre ?? '',
                           parejaDocumento: p.parejaDocumento ?? '',
                           parejaContacto: p.parejaContacto ?? '',
-                          parejaFalta: siNoFromBoolean(p.parejaFalta),
+                          parejaCarreraCrecimiento: siNoFromBoolean(p.parejaCarreraCrecimiento),
+                          parejaLlevoGrupoConexion: siNoFromBoolean(p.parejaLlevoGrupoConexion),
                         })
                       }}
                     >
