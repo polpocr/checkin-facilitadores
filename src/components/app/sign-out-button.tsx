@@ -1,6 +1,5 @@
 'use client'
 
-import { authClient } from '@/lib/auth-client'
 import { Button } from '@/components/ui/button'
 
 export function SignOutButton({
@@ -19,9 +18,11 @@ export function SignOutButton({
       variant={variant}
       size={size}
       className={className}
-      onClick={async () => {
-        await authClient.signOut()
-        window.location.assign(signInPath)
+      onClick={() => {
+        // ponytail: navigate before clearing auth so protected useQuery subs tear down first
+        const url = new URL(signInPath, window.location.origin)
+        url.searchParams.set('logout', '1')
+        window.location.replace(url.pathname + url.search)
       }}
     >
       Cerrar sesión

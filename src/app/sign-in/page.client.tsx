@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { authClient } from '@/lib/auth-client'
 import { Button } from '@/components/ui/button'
@@ -22,6 +22,17 @@ export default function SignInPage() {
       ? 'No tienes permiso para esa sección (p. ej. staff check-in no puede entrar a /admin). Cierra sesión e intenta de nuevo.'
       : null,
   )
+
+  const logoutHandled = useRef(false)
+  useEffect(() => {
+    if (searchParams.get('logout') !== '1' || logoutHandled.current) return
+    logoutHandled.current = true
+    void authClient.signOut().then(() => {
+      const next = new URL(window.location.href)
+      next.searchParams.delete('logout')
+      window.history.replaceState({}, '', next.pathname + next.search)
+    })
+  }, [searchParams])
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault()
