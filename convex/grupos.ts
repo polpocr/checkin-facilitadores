@@ -1,6 +1,7 @@
 import { mutation, query } from './_generated/server'
 import { ConvexError, v } from 'convex/values'
 import { requireAdmin } from './lib/authorization'
+import { resolveGrupoNombre } from './lib/grupoProvisionalName'
 
 export const list = query({
   args: {
@@ -57,11 +58,14 @@ export const create = mutation({
       .first()
     if (existing) throw new ConvexError('Ya existe un grupo con ese orden')
 
+    const persona = await ctx.db.get(args.personaId)
+    const nombre = resolveGrupoNombre(args.orden, persona?.nombreCompleto, args.nombre)
+
     const now = Date.now()
     const grupoId = await ctx.db.insert('grupos', {
       personaId: args.personaId,
       checkinId: args.checkinId,
-      nombre: args.nombre?.trim() || undefined,
+      nombre,
       orden: args.orden,
       createdAt: now,
       updatedAt: now,

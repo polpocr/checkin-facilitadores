@@ -4,6 +4,7 @@ import { ConvexError, v } from 'convex/values'
 import { requireAdmin, requireOperador } from './lib/authorization'
 import type { Doc, Id } from './_generated/dataModel'
 import { findEffectiveCheckin } from './lib/checkinPair'
+import { resolveGrupoNombre } from './lib/grupoProvisionalName'
 
 const grupoInput = v.object({
   nombre: v.optional(v.string()),
@@ -26,10 +27,13 @@ async function insertGrupoWithIntegrantes(
     throw new ConvexError(`El grupo ${args.orden} requiere al menos un integrante`)
   }
 
+  const persona = await ctx.db.get(args.personaId)
+  const nombre = resolveGrupoNombre(args.orden, persona?.nombreCompleto, args.nombre)
+
   const grupoId = await ctx.db.insert('grupos', {
     personaId: args.personaId,
     checkinId: args.checkinId,
-    nombre: args.nombre?.trim() || undefined,
+    nombre,
     orden: args.orden,
     createdAt: now,
     updatedAt: now,

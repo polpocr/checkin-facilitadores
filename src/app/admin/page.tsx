@@ -118,7 +118,7 @@ export default function AdminDashboardPage() {
           title="Integrantes capturados"
           value={kpis.totalIntegrantes}
           subtitle={`Promedio ${kpis.promedioIntegrantesPorGrupo} por grupo`}
-          href="/admin/integrantes"
+          href="/admin/grupos"
           icon={Users}
         />
       </div>

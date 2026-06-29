@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useMutation, useQuery } from 'convex/react'
 import { api } from '@convex/_generated/api'
+import { ConfirmDeleteDialog } from '@/components/app/confirm-delete-dialog'
 import { EmptyState } from '@/components/app/empty-state'
 import { LoadingState } from '@/components/app/loading-state'
 import { PageHeader } from '@/components/app/page-header'
@@ -120,20 +121,20 @@ export default function StaffAdminPage() {
                         >
                           {u.active ? 'Desactivar' : 'Activar'}
                         </Button>
-                        <Button
-                          size="sm"
-                          variant="destructive"
-                          onClick={async () => {
+                        <ConfirmDeleteDialog
+                          trigger={<Button size="sm" variant="destructive">Eliminar</Button>}
+                          title="Eliminar usuario"
+                          description={`¿Eliminar a ${u.email}? Esta acción no se puede deshacer.`}
+                          onConfirm={async () => {
                             try {
                               await remove({ id: u._id })
                               toast.success('Eliminado')
                             } catch (err) {
                               toast.error(err instanceof Error ? err.message : 'Error')
+                              throw err
                             }
                           }}
-                        >
-                          Eliminar
-                        </Button>
+                        />
                       </div>
                     )}
                   </TableCell>

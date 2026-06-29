@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useMutation, useQuery } from 'convex/react'
 import { api } from '@convex/_generated/api'
 import type { Id } from '@convex/_generated/dataModel'
+import { ConfirmDeleteDialog } from '@/components/app/confirm-delete-dialog'
 import { EmptyState } from '@/components/app/empty-state'
 import { LoadingState } from '@/components/app/loading-state'
 import { PageHeader } from '@/components/app/page-header'
@@ -107,7 +108,20 @@ export default function FacilitadoresAdminPage() {
                   <TableCell>{f.esposoNombre ?? '—'}</TableCell>
                   <TableCell className="space-x-2 text-right">
                     <Button size="sm" variant="outline" onClick={() => { setEditingId(f._id); setForm({ nombreCompleto: f.nombreCompleto, documento: f.documento, contacto: f.contacto ?? '', esposoNombre: f.esposoNombre ?? '' }) }}>Editar</Button>
-                    <Button size="sm" variant="destructive" onClick={async () => { try { await remove({ id: f._id }); toast.success('Eliminado') } catch (err) { toast.error(err instanceof Error ? err.message : 'Error') } }}>Eliminar</Button>
+                    <ConfirmDeleteDialog
+                      trigger={<Button size="sm" variant="destructive">Eliminar</Button>}
+                      title="Eliminar operador"
+                      description={`¿Eliminar a ${f.nombreCompleto}? Esta acción no se puede deshacer.`}
+                      onConfirm={async () => {
+                        try {
+                          await remove({ id: f._id })
+                          toast.success('Eliminado')
+                        } catch (err) {
+                          toast.error(err instanceof Error ? err.message : 'Error')
+                          throw err
+                        }
+                      }}
+                    />
                   </TableCell>
                 </TableRow>
               ))}

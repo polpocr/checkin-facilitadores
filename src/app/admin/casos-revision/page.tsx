@@ -5,6 +5,7 @@ import { Suspense, useMemo, useState } from 'react'
 import { useMutation, useQuery } from 'convex/react'
 import { api } from '@convex/_generated/api'
 import type { Id } from '@convex/_generated/dataModel'
+import { ConfirmDeleteDialog } from '@/components/app/confirm-delete-dialog'
 import { EmptyState } from '@/components/app/empty-state'
 import { LoadingState } from '@/components/app/loading-state'
 import { PageHeader } from '@/components/app/page-header'
@@ -138,20 +139,20 @@ function CasosRevisionContent() {
                             Resolver
                           </Button>
                         )}
-                        <Button
-                          size="sm"
-                          variant="destructive"
-                          onClick={async () => {
+                        <ConfirmDeleteDialog
+                          trigger={<Button size="sm" variant="destructive">Eliminar</Button>}
+                          title="Eliminar caso"
+                          description={`¿Eliminar el caso "${c.textoBusqueda}"? Esta acción no se puede deshacer.`}
+                          onConfirm={async () => {
                             try {
                               await remove({ id: c._id })
                               toast.success('Eliminado')
                             } catch (err) {
                               toast.error(err instanceof Error ? err.message : 'Error')
+                              throw err
                             }
                           }}
-                        >
-                          Eliminar
-                        </Button>
+                        />
                       </TableCell>
                     </TableRow>
                   ))}

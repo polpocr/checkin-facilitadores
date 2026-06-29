@@ -5,6 +5,7 @@ import { useMutation, useQuery } from 'convex/react'
 import { api } from '@convex/_generated/api'
 import type { Doc } from '@convex/_generated/dataModel'
 import { buildSpouseSuggestion, canAddSecondGroup, validateCheckinPayload } from '@/lib/checkin-rules'
+import { displayGrupoNombre, provisionalGrupoNombre } from '@/lib/grupo-provisional-name'
 import { EmptyState } from '@/components/app/empty-state'
 import { IntegranteSearchInput } from '@/components/app/integrante-search-input'
 import { LoadingState } from '@/components/app/loading-state'
@@ -79,14 +80,25 @@ export default function CheckinPage() {
     if (!selected) return
     const suggestion = buildSpouseSuggestion(selected.parejaNombre)
     setCantidadGrupos(1)
-    setGrupos([{ nombre: '', integrantes: suggestion.length ? [...suggestion, ''] : [''] }])
+    setGrupos([
+      {
+        nombre: provisionalGrupoNombre(1, selected.nombreCompleto),
+        integrantes: suggestion.length ? [...suggestion, ''] : [''],
+      },
+    ])
     setStep('groups')
   }
 
   function startAddMissingGroup() {
     if (!selected) return
     const suggestion = buildSpouseSuggestion(selected.parejaNombre)
-    setGrupos([{ nombre: '', integrantes: suggestion.length ? [...suggestion, ''] : [''] }])
+    const nextOrden = ((status?.grupos.length ?? 0) + 1) as 1 | 2
+    setGrupos([
+      {
+        nombre: provisionalGrupoNombre(nextOrden, selected.nombreCompleto),
+        integrantes: suggestion.length ? [...suggestion, ''] : [''],
+      },
+    ])
     setStep('groups')
   }
 
@@ -95,10 +107,10 @@ export default function CheckinPage() {
     setGrupos((prev) => {
       if (count === 1) return [prev[0] ?? { nombre: '', integrantes: [''] }]
       const second = prev[1] ?? {
-        nombre: '',
+        nombre: selected ? provisionalGrupoNombre(2, selected.nombreCompleto) : '',
         integrantes: spouseSuggestion.length ? [...spouseSuggestion, ''] : [''],
       }
-      return [prev[0] ?? { nombre: '', integrantes: [''] }, second]
+      return [prev[0] ?? { nombre: selected ? provisionalGrupoNombre(1, selected.nombreCompleto) : '', integrantes: [''] }, second]
     })
   }
 
@@ -280,8 +292,7 @@ export default function CheckinPage() {
                 {status.grupos.map((g) => (
                   <div key={g._id} className="rounded-lg border bg-background p-3">
                     <p className="font-medium">
-                      Grupo {g.orden}
-                      {g.nombre ? `: ${g.nombre}` : ''}
+                      {displayGrupoNombre(g.orden, selected.nombreCompleto, g.nombre)}
                     </p>
                     <ul className="mt-1 list-inside list-disc text-sm text-muted-foreground">
                       {(status.integrantesByGrupo[g._id] ?? []).map((i) => (
@@ -341,9 +352,13 @@ export default function CheckinPage() {
 
             {(status?.hasCheckin ? grupos.slice(0, 1) : grupos).map((grupo, gi) => (
               <div key={gi} className="space-y-4 rounded-xl border bg-muted/10 p-4">
-                <p className="font-medium">Grupo {gi + 1}</p>
+                <p className="font-medium">
+                  {selected
+                    ? displayGrupoNombre(gi + 1, selected.nombreCompleto, grupo.nombre)
+                    : `Grupo ${gi + 1}`}
+                </p>
                 <div className="space-y-2">
-                  <Label>Nombre del grupo (opcional)</Label>
+                  <Label>Nombre provisional del grupo</Label>
                   <Input
                     value={grupo.nombre}
                     onChange={(e) => {

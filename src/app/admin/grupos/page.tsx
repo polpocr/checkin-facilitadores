@@ -4,6 +4,8 @@ import { useState } from 'react'
 import { useMutation, useQuery } from 'convex/react'
 import { api } from '@convex/_generated/api'
 import type { Id } from '@convex/_generated/dataModel'
+import { displayGrupoNombre } from '@/lib/grupo-provisional-name'
+import { ConfirmDeleteDialog } from '@/components/app/confirm-delete-dialog'
 import { EditFieldDialog } from '@/components/app/edit-field-dialog'
 import { EmptyState } from '@/components/app/empty-state'
 import { LoadingState } from '@/components/app/loading-state'
@@ -21,10 +23,6 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
 import { toast } from 'sonner'
-
-function provisionalNameLabel(nombre: string | undefined) {
-  return nombre?.trim() ? nombre : 'Sin nombre provisional'
-}
 
 export default function GruposAdminPage() {
   const [personaFilter, setPersonaFilter] = useState('')
@@ -75,8 +73,8 @@ export default function GruposAdminPage() {
                   <TableRow key={g._id}>
                     <TableCell className="font-medium">{p?.nombreCompleto ?? g.personaId}</TableCell>
                     <TableCell>{g.orden}</TableCell>
-                    <TableCell className={g.nombre ? undefined : 'text-muted-foreground'}>
-                      {provisionalNameLabel(g.nombre)}
+                    <TableCell className="font-medium">
+                      {displayGrupoNombre(g.orden, p?.nombreCompleto ?? '', g.nombre)}
                     </TableCell>
                     <TableCell className="space-x-2 text-right">
                       <Button size="sm" variant="outline" onClick={() => setDetailId(g._id)}>
@@ -85,20 +83,20 @@ export default function GruposAdminPage() {
                       <Button size="sm" variant="outline" onClick={() => setEditing({ id: g._id, nombre: g.nombre ?? '' })}>
                         Editar
                       </Button>
-                      <Button
-                        size="sm"
-                        variant="destructive"
-                        onClick={async () => {
+                      <ConfirmDeleteDialog
+                        trigger={<Button size="sm" variant="destructive">Eliminar</Button>}
+                        title="Eliminar grupo"
+                        description={`¿Eliminar ${displayGrupoNombre(g.orden, p?.nombreCompleto ?? '', g.nombre)}? También se eliminarán sus integrantes.`}
+                        onConfirm={async () => {
                           try {
                             await remove({ id: g._id })
                             toast.success('Eliminado')
                           } catch (err) {
                             toast.error(err instanceof Error ? err.message : 'Error')
+                            throw err
                           }
                         }}
-                      >
-                        Eliminar
-                      </Button>
+                      />
                     </TableCell>
                   </TableRow>
                 )
@@ -130,8 +128,12 @@ export default function GruposAdminPage() {
               </div>
               <div>
                 <dt className="text-muted-foreground">Nombre provisional</dt>
-                <dd className={detail.grupo.nombre ? 'font-medium' : 'text-muted-foreground'}>
-                  {provisionalNameLabel(detail.grupo.nombre)}
+                <dd className="font-medium">
+                  {displayGrupoNombre(
+                    detail.grupo.orden,
+                    detail.persona?.nombreCompleto ?? '',
+                    detail.grupo.nombre,
+                  )}
                 </dd>
               </div>
               <div>

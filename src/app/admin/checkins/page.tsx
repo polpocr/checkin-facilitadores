@@ -3,6 +3,7 @@
 import { useQuery, useMutation } from 'convex/react'
 import { api } from '@convex/_generated/api'
 import type { Id } from '@convex/_generated/dataModel'
+import { ConfirmDeleteDialog } from '@/components/app/confirm-delete-dialog'
 import { EmptyState } from '@/components/app/empty-state'
 import { LoadingState } from '@/components/app/loading-state'
 import { PageHeader } from '@/components/app/page-header'
@@ -88,20 +89,20 @@ function CheckinRow({
         >
           {checkin.cantidadGrupos === 1 ? 'Marcar 2 grupos' : 'Marcar 1 grupo'}
         </Button>
-        <Button
-          size="sm"
-          variant="destructive"
-          onClick={async () => {
+        <ConfirmDeleteDialog
+          trigger={<Button size="sm" variant="destructive">Eliminar</Button>}
+          title="Eliminar check-in"
+          description="¿Eliminar este check-in y sus grupos asociados? Esta acción no se puede deshacer."
+          onConfirm={async () => {
             try {
               await onRemove({ id: checkin._id })
               toast.success('Check-in eliminado')
             } catch (err) {
               toast.error(err instanceof Error ? err.message : 'Error')
+              throw err
             }
           }}
-        >
-          Eliminar
-        </Button>
+        />
       </TableCell>
     </TableRow>
   )

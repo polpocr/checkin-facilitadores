@@ -10,7 +10,6 @@ const nav = [
   { href: '/admin/personas', label: 'Operadores' },
   { href: '/admin/checkins', label: 'Check-ins' },
   { href: '/admin/grupos', label: 'Grupos' },
-  { href: '/admin/integrantes', label: 'Integrantes' },
   { href: '/admin/casos-revision', label: 'Revisión' },
   { href: '/admin/staff', label: 'Staff' },
 ] as const
