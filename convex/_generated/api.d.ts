@@ -20,6 +20,7 @@ import type * as http from "../http.js";
 import type * as integrantes from "../integrantes.js";
 import type * as lib_authorization from "../lib/authorization.js";
 import type * as lib_checkinPair from "../lib/checkinPair.js";
+import type * as lib_grupoCategoria from "../lib/grupoCategoria.js";
 import type * as lib_grupoProvisionalName from "../lib/grupoProvisionalName.js";
 import type * as personas from "../personas.js";
 import type * as seed from "../seed.js";
@@ -44,6 +45,7 @@ declare const fullApi: ApiFromModules<{
   integrantes: typeof integrantes;
   "lib/authorization": typeof lib_authorization;
   "lib/checkinPair": typeof lib_checkinPair;
+  "lib/grupoCategoria": typeof lib_grupoCategoria;
   "lib/grupoProvisionalName": typeof lib_grupoProvisionalName;
   personas: typeof personas;
   seed: typeof seed;

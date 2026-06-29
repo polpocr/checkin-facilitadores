@@ -1,5 +1,8 @@
+import type { GrupoCategoria } from './grupo-categoria'
+
 export type GrupoInput = {
   nombre?: string
+  categoria: GrupoCategoria
   integrantes: string[]
 }
 
@@ -18,6 +21,9 @@ export function validateCheckinPayload(
     throw new Error('Debe capturar exactamente la cantidad de grupos seleccionada')
   }
   for (const [i, grupo] of grupos.entries()) {
+    if (!grupo.categoria) {
+      throw new Error(`El grupo ${i + 1} requiere una categoría`)
+    }
     const nombres = grupo.integrantes.map((n) => n.trim()).filter(Boolean)
     if (nombres.length === 0) {
       throw new Error(`El grupo ${i + 1} requiere al menos un integrante`)

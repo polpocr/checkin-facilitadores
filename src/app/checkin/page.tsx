@@ -5,6 +5,7 @@ import { useMutation, useQuery } from 'convex/react'
 import { api } from '@convex/_generated/api'
 import type { Doc } from '@convex/_generated/dataModel'
 import { buildSpouseSuggestion, canAddSecondGroup, validateCheckinPayload } from '@/lib/checkin-rules'
+import { GRUPO_CATEGORIAS, type GrupoCategoria } from '@/lib/grupo-categoria'
 import { displayGrupoNombre, provisionalGrupoNombre } from '@/lib/grupo-provisional-name'
 import { EmptyState } from '@/components/app/empty-state'
 import { IntegranteSearchInput } from '@/components/app/integrante-search-input'
@@ -14,6 +15,7 @@ import { StepIndicator, type CheckinStepId } from '@/components/app/step-indicat
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
 import { toast } from 'sonner'
@@ -23,8 +25,11 @@ type Step = CheckinStepId
 
 type GrupoDraft = {
   nombre: string
+  categoria: GrupoCategoria | ''
   integrantes: string[]
 }
+
+const emptyGrupo = (): GrupoDraft => ({ nombre: '', categoria: '', integrantes: [''] })
 
 export default function CheckinPage() {
   const [step, setStep] = useState<Step>('search')
@@ -32,7 +37,7 @@ export default function CheckinPage() {
   const [debouncedTerm, setDebouncedTerm] = useState('')
   const [selected, setSelected] = useState<Doc<'personas'> | null>(null)
   const [cantidadGrupos, setCantidadGrupos] = useState<1 | 2>(1)
-  const [grupos, setGrupos] = useState<GrupoDraft[]>([{ nombre: '', integrantes: [''] }])
+  const [grupos, setGrupos] = useState<GrupoDraft[]>([emptyGrupo()])
   const [saving, setSaving] = useState(false)
   const [saveError, setSaveError] = useState<string | null>(null)
 
@@ -66,7 +71,7 @@ export default function CheckinPage() {
     setDebouncedTerm('')
     setSelected(null)
     setCantidadGrupos(1)
-    setGrupos([{ nombre: '', integrantes: [''] }])
+    setGrupos([emptyGrupo()])
     setSaveError(null)
   }
 
@@ -83,6 +88,7 @@ export default function CheckinPage() {
     setGrupos([
       {
         nombre: provisionalGrupoNombre(1, selected.nombreCompleto),
+        categoria: '',
         integrantes: suggestion.length ? [...suggestion, ''] : [''],
       },
     ])
@@ -96,6 +102,7 @@ export default function CheckinPage() {
     setGrupos([
       {
         nombre: provisionalGrupoNombre(nextOrden, selected.nombreCompleto),
+        categoria: '',
         integrantes: suggestion.length ? [...suggestion, ''] : [''],
       },
     ])
@@ -105,12 +112,20 @@ export default function CheckinPage() {
   function setGrupoCount(count: 1 | 2) {
     setCantidadGrupos(count)
     setGrupos((prev) => {
-      if (count === 1) return [prev[0] ?? { nombre: '', integrantes: [''] }]
+      if (count === 1) return [prev[0] ?? emptyGrupo()]
       const second = prev[1] ?? {
         nombre: selected ? provisionalGrupoNombre(2, selected.nombreCompleto) : '',
+        categoria: '' as const,
         integrantes: spouseSuggestion.length ? [...spouseSuggestion, ''] : [''],
       }
-      return [prev[0] ?? { nombre: selected ? provisionalGrupoNombre(1, selected.nombreCompleto) : '', integrantes: [''] }, second]
+      return [
+        prev[0] ?? {
+          nombre: selected ? provisionalGrupoNombre(1, selected.nombreCompleto) : '',
+          categoria: '' as const,
+          integrantes: [''],
+        },
+        second,
+      ]
     })
   }
 
@@ -121,6 +136,7 @@ export default function CheckinPage() {
     try {
       const payload = grupos.map((g) => ({
         nombre: g.nombre || undefined,
+        categoria: g.categoria as GrupoCategoria,
         integrantes: g.integrantes,
       }))
 
@@ -167,6 +183,9 @@ export default function CheckinPage() {
     status?.hasCheckin &&
     status.checkin &&
     canAddSecondGroup(status.grupos.length, status.checkin.cantidadGrupos)
+
+  const gruposToRender = status?.hasCheckin ? grupos.slice(0, 1) : grupos
+  const canSubmit = gruposToRender.every((g) => g.categoria !== '')
 
   return (
     <div className="space-y-6">
@@ -294,6 +313,7 @@ export default function CheckinPage() {
                     <p className="font-medium">
                       {displayGrupoNombre(g.orden, selected.nombreCompleto, g.nombre)}
                     </p>
+                    <p className="text-sm text-muted-foreground">{g.categoria}</p>
                     <ul className="mt-1 list-inside list-disc text-sm text-muted-foreground">
                       {(status.integrantesByGrupo[g._id] ?? []).map((i) => (
                         <li key={i._id}>{i.nombre}</li>
@@ -357,6 +377,28 @@ export default function CheckinPage() {
                     ? displayGrupoNombre(gi + 1, selected.nombreCompleto, grupo.nombre)
                     : `Grupo ${gi + 1}`}
                 </p>
+                <div className="space-y-2">
+                  <Label>Categoría</Label>
+                  <Select
+                    value={grupo.categoria || undefined}
+                    onValueChange={(value) => {
+                      const copy = [...grupos]
+                      copy[gi] = { ...copy[gi], categoria: value as GrupoCategoria }
+                      setGrupos(copy)
+                    }}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Seleccione una categoría" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {GRUPO_CATEGORIAS.map((cat) => (
+                        <SelectItem key={cat} value={cat}>
+                          {cat}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
                 <div className="space-y-2">
                   <Label>Nombre provisional del grupo</Label>
                   <Input
@@ -432,7 +474,7 @@ export default function CheckinPage() {
               <Button variant="outline" onClick={() => setStep('confirm')}>
                 Volver
               </Button>
-              <Button disabled={saving} onClick={() => void submitCheckin(!!status?.hasCheckin)}>
+              <Button disabled={saving || !canSubmit} onClick={() => void submitCheckin(!!status?.hasCheckin)}>
                 {saving ? 'Guardando…' : 'Confirmar y guardar'}
               </Button>
             </div>

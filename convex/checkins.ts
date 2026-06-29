@@ -4,10 +4,12 @@ import { ConvexError, v } from 'convex/values'
 import { requireAdmin, requireOperador } from './lib/authorization'
 import type { Doc, Id } from './_generated/dataModel'
 import { findBlockingCheckin, findEffectiveCheckin } from './lib/checkinPair'
+import { grupoCategoriaValidator, type GrupoCategoria } from './lib/grupoCategoria'
 import { resolveGrupoNombre } from './lib/grupoProvisionalName'
 
 const grupoInput = v.object({
   nombre: v.optional(v.string()),
+  categoria: grupoCategoriaValidator,
   integrantes: v.array(v.string()),
 })
 
@@ -18,6 +20,7 @@ async function insertGrupoWithIntegrantes(
     checkinId: Id<'checkins'>
     orden: 1 | 2
     nombre?: string
+    categoria: GrupoCategoria
     integrantes: string[]
   },
 ) {
@@ -34,6 +37,7 @@ async function insertGrupoWithIntegrantes(
     personaId: args.personaId,
     checkinId: args.checkinId,
     nombre,
+    categoria: args.categoria,
     orden: args.orden,
     createdAt: now,
     updatedAt: now,
@@ -89,6 +93,7 @@ export const createWithGrupos = mutation({
         checkinId,
         orden: (index + 1) as 1 | 2,
         nombre: grupo.nombre,
+        categoria: grupo.categoria,
         integrantes: grupo.integrantes,
       })
     }
@@ -129,6 +134,7 @@ export const addMissingGrupo = mutation({
       checkinId: checkin._id,
       orden: nextOrden,
       nombre: args.grupo.nombre,
+      categoria: args.grupo.categoria,
       integrantes: args.grupo.integrantes,
     })
 

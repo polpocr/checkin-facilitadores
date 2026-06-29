@@ -16,8 +16,10 @@ const exportRowValidator = v.object({
   checkinFecha: v.string(),
   cantidadGrupos: v.string(),
   grupo1Nombre: v.string(),
+  grupo1Categoria: v.string(),
   grupo1Integrantes: v.string(),
   grupo2Nombre: v.string(),
+  grupo2Categoria: v.string(),
   grupo2Integrantes: v.string(),
 })
 
@@ -43,8 +45,10 @@ export const personasYGrupos = query({
       let checkinFecha = ''
       let cantidadGrupos = ''
       let grupo1Nombre = ''
+      let grupo1Categoria = ''
       let grupo1Integrantes = ''
       let grupo2Nombre = ''
+      let grupo2Categoria = ''
       let grupo2Integrantes = ''
 
       if (effective) {
@@ -78,9 +82,11 @@ export const personasYGrupos = query({
 
           if (grupo.orden === 1) {
             grupo1Nombre = nombre
+            grupo1Categoria = grupo.categoria
             grupo1Integrantes = nombres
           } else if (grupo.orden === 2) {
             grupo2Nombre = nombre
+            grupo2Categoria = grupo.categoria
             grupo2Integrantes = nombres
           }
         }
@@ -98,8 +104,10 @@ export const personasYGrupos = query({
         checkinFecha,
         cantidadGrupos,
         grupo1Nombre,
+        grupo1Categoria,
         grupo1Integrantes,
         grupo2Nombre,
+        grupo2Categoria,
         grupo2Integrantes,
       })
     }

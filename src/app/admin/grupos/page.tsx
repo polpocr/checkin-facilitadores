@@ -5,8 +5,8 @@ import { useMutation, useQuery } from 'convex/react'
 import { api } from '@convex/_generated/api'
 import type { Id } from '@convex/_generated/dataModel'
 import { displayGrupoNombre } from '@/lib/grupo-provisional-name'
+import { GRUPO_CATEGORIAS, type GrupoCategoria } from '@/lib/grupo-categoria'
 import { ConfirmDeleteDialog } from '@/components/app/confirm-delete-dialog'
-import { EditFieldDialog } from '@/components/app/edit-field-dialog'
 import { EmptyState } from '@/components/app/empty-state'
 import { LoadingState } from '@/components/app/loading-state'
 import { PageHeader } from '@/components/app/page-header'
@@ -19,6 +19,8 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
@@ -26,7 +28,11 @@ import { toast } from 'sonner'
 
 export default function GruposAdminPage() {
   const [personaFilter, setPersonaFilter] = useState('')
-  const [editing, setEditing] = useState<{ id: Id<'grupos'>; nombre: string } | null>(null)
+  const [editing, setEditing] = useState<{
+    id: Id<'grupos'>
+    nombre: string
+    categoria: GrupoCategoria
+  } | null>(null)
   const [detailId, setDetailId] = useState<Id<'grupos'> | null>(null)
   const personas = useQuery(api.personas.list, {})
   const rows = useQuery(api.grupos.list, {})
@@ -62,6 +68,7 @@ export default function GruposAdminPage() {
               <TableRow>
                 <TableHead>Persona</TableHead>
                 <TableHead>Orden</TableHead>
+                <TableHead>Categoría</TableHead>
                 <TableHead>Nombre provisional</TableHead>
                 <TableHead className="text-right">Acciones</TableHead>
               </TableRow>
@@ -73,6 +80,7 @@ export default function GruposAdminPage() {
                   <TableRow key={g._id}>
                     <TableCell className="font-medium">{p?.nombreCompleto ?? g.personaId}</TableCell>
                     <TableCell>{g.orden}</TableCell>
+                    <TableCell>{g.categoria}</TableCell>
                     <TableCell className="font-medium">
                       {displayGrupoNombre(g.orden, p?.nombreCompleto ?? '', g.nombre)}
                     </TableCell>
@@ -80,7 +88,17 @@ export default function GruposAdminPage() {
                       <Button size="sm" variant="outline" onClick={() => setDetailId(g._id)}>
                         Ver detalle
                       </Button>
-                      <Button size="sm" variant="outline" onClick={() => setEditing({ id: g._id, nombre: g.nombre ?? '' })}>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() =>
+                          setEditing({
+                            id: g._id,
+                            nombre: g.nombre ?? '',
+                            categoria: g.categoria,
+                          })
+                        }
+                      >
                         Editar
                       </Button>
                       <ConfirmDeleteDialog
@@ -127,6 +145,10 @@ export default function GruposAdminPage() {
                 <dd className="tabular-nums">{detail.grupo.orden}</dd>
               </div>
               <div>
+                <dt className="text-muted-foreground">Categoría</dt>
+                <dd className="font-medium">{detail.grupo.categoria}</dd>
+              </div>
+              <div>
                 <dt className="text-muted-foreground">Nombre provisional</dt>
                 <dd className="font-medium">
                   {displayGrupoNombre(
@@ -163,22 +185,67 @@ export default function GruposAdminPage() {
         </DialogContent>
       </Dialog>
 
-      {editing && (
-        <EditFieldDialog
-          open={!!editing}
-          onOpenChange={(open) => !open && setEditing(null)}
-          title="Editar grupo"
-          description="Actualice el nombre provisional del grupo"
-          label="Nombre provisional"
-          initialValue={editing.nombre}
-          required={false}
-          onSave={async (nombre) => {
-            await update({ id: editing.id, nombre: nombre || undefined })
-            toast.success('Actualizado')
-            setEditing(null)
-          }}
-        />
-      )}
+      <Dialog open={!!editing} onOpenChange={(open) => !open && setEditing(null)}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Editar grupo</DialogTitle>
+            <DialogDescription>Actualice el nombre provisional y la categoría</DialogDescription>
+          </DialogHeader>
+          {editing && (
+            <form
+              className="space-y-4"
+              onSubmit={async (e) => {
+                e.preventDefault()
+                try {
+                  await update({
+                    id: editing.id,
+                    nombre: editing.nombre || undefined,
+                    categoria: editing.categoria,
+                  })
+                  toast.success('Actualizado')
+                  setEditing(null)
+                } catch (err) {
+                  toast.error(err instanceof Error ? err.message : 'Error')
+                }
+              }}
+            >
+              <div className="space-y-2">
+                <Label>Categoría</Label>
+                <Select
+                  value={editing.categoria}
+                  onValueChange={(value) =>
+                    setEditing({ ...editing, categoria: value as GrupoCategoria })
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {GRUPO_CATEGORIAS.map((cat) => (
+                      <SelectItem key={cat} value={cat}>
+                        {cat}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label>Nombre provisional</Label>
+                <Input
+                  value={editing.nombre}
+                  onChange={(e) => setEditing({ ...editing, nombre: e.target.value })}
+                />
+              </div>
+              <div className="flex justify-end gap-2">
+                <Button type="button" variant="outline" onClick={() => setEditing(null)}>
+                  Cancelar
+                </Button>
+                <Button type="submit">Guardar</Button>
+              </div>
+            </form>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

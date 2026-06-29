@@ -1,5 +1,6 @@
 import { defineSchema, defineTable } from 'convex/server'
 import { v } from 'convex/values'
+import { grupoCategoriaValidator } from './lib/grupoCategoria'
 
 export default defineSchema({
   users: defineTable({
@@ -59,6 +60,7 @@ export default defineSchema({
     personaId: v.id('personas'),
     checkinId: v.id('checkins'),
     nombre: v.optional(v.string()),
+    categoria: grupoCategoriaValidator,
     orden: v.union(v.literal(1), v.literal(2)),
     createdAt: v.number(),
     updatedAt: v.number(),

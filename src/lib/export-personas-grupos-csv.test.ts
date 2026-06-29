@@ -14,8 +14,10 @@ function sampleRow(overrides: Partial<ExportRow> = {}): ExportRow {
     checkinFecha: '',
     cantidadGrupos: '',
     grupo1Nombre: '',
+    grupo1Categoria: '',
     grupo1Integrantes: '',
     grupo2Nombre: '',
+    grupo2Categoria: '',
     grupo2Integrantes: '',
     ...overrides,
   }
@@ -33,6 +35,7 @@ function runExportCsvSelfCheck() {
       contacto: 'tel "oficina"',
       tieneCheckin: true,
       grupo1Integrantes: 'Ana; Luis',
+      grupo1Categoria: 'G.C Bíblico',
     }),
   ])
 
@@ -40,6 +43,7 @@ function runExportCsvSelfCheck() {
   assert.ok(csv.includes('"García, Luis"'), 'comma escaped')
   assert.ok(csv.includes('"tel ""oficina"""'), 'quotes escaped')
   assert.ok(csv.includes('Sí'), 'boolean as Sí')
+  assert.ok(csv.includes('G.C Bíblico'), 'categoria column')
 }
 
 runExportCsvSelfCheck()

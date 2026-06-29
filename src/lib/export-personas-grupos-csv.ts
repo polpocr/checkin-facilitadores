@@ -15,8 +15,10 @@ const COLUMNS: { key: keyof ExportRow; header: string }[] = [
   { key: 'checkinFecha', header: 'Fecha check-in' },
   { key: 'cantidadGrupos', header: 'Cantidad grupos' },
   { key: 'grupo1Nombre', header: 'Grupo 1' },
+  { key: 'grupo1Categoria', header: 'Categoría grupo 1' },
   { key: 'grupo1Integrantes', header: 'Integrantes grupo 1' },
   { key: 'grupo2Nombre', header: 'Grupo 2' },
+  { key: 'grupo2Categoria', header: 'Categoría grupo 2' },
   { key: 'grupo2Integrantes', header: 'Integrantes grupo 2' },
 ]
 

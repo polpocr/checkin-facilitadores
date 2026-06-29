@@ -1,6 +1,7 @@
 import { mutation, query } from './_generated/server'
 import { ConvexError, v } from 'convex/values'
 import { requireAdmin } from './lib/authorization'
+import { grupoCategoriaValidator } from './lib/grupoCategoria'
 import { resolveGrupoNombre } from './lib/grupoProvisionalName'
 
 export const list = query({
@@ -42,6 +43,7 @@ export const create = mutation({
     personaId: v.id('personas'),
     checkinId: v.id('checkins'),
     nombre: v.optional(v.string()),
+    categoria: grupoCategoriaValidator,
     orden: v.union(v.literal(1), v.literal(2)),
     integrantes: v.array(v.string()),
   },
@@ -66,6 +68,7 @@ export const create = mutation({
       personaId: args.personaId,
       checkinId: args.checkinId,
       nombre,
+      categoria: args.categoria,
       orden: args.orden,
       createdAt: now,
       updatedAt: now,
@@ -89,6 +92,7 @@ export const update = mutation({
   args: {
     id: v.id('grupos'),
     nombre: v.optional(v.string()),
+    categoria: v.optional(grupoCategoriaValidator),
     orden: v.optional(v.union(v.literal(1), v.literal(2))),
   },
   handler: async (ctx, args) => {
@@ -110,6 +114,7 @@ export const update = mutation({
 
     await ctx.db.patch(args.id, {
       ...(args.nombre !== undefined ? { nombre: args.nombre.trim() || undefined } : {}),
+      ...(args.categoria !== undefined ? { categoria: args.categoria } : {}),
       ...(args.orden !== undefined ? { orden: args.orden } : {}),
       updatedAt: Date.now(),
     })
