@@ -16,7 +16,6 @@ import { toast } from 'sonner'
 export default function CheckinsAdminPage() {
   const rows = useQuery(api.checkins.list, {})
   const remove = useMutation(api.checkins.remove)
-  const update = useMutation(api.checkins.update)
 
   return (
     <div className="space-y-6">
@@ -40,7 +39,7 @@ export default function CheckinsAdminPage() {
             </TableHeader>
             <TableBody>
               {rows.map((c) => (
-                <CheckinRow key={c._id} checkin={c} onRemove={remove} onUpdate={update} />
+                <CheckinRow key={c._id} checkin={c} onRemove={remove} />
               ))}
             </TableBody>
           </Table>
@@ -53,7 +52,6 @@ export default function CheckinsAdminPage() {
 function CheckinRow({
   checkin,
   onRemove,
-  onUpdate,
 }: {
   checkin: {
     _id: Id<'checkins'>
@@ -63,7 +61,6 @@ function CheckinRow({
     createdAt: number
   }
   onRemove: (args: { id: Id<'checkins'> }) => Promise<unknown>
-  onUpdate: (args: { id: Id<'checkins'>; cantidadGrupos?: 1 | 2 }) => Promise<unknown>
 }) {
   const detail = useQuery(api.checkins.getDetail, { id: checkin._id })
 
@@ -73,22 +70,7 @@ function CheckinRow({
       <TableCell className="text-muted-foreground">{detail?.operador?.email ?? checkin.operadorId}</TableCell>
       <TableCell className="tabular-nums">{checkin.cantidadGrupos}</TableCell>
       <TableCell>{format(checkin.createdAt, 'PPp', { locale: es })}</TableCell>
-      <TableCell className="space-x-2 text-right">
-        <Button
-          size="sm"
-          variant="outline"
-          onClick={async () => {
-            const next = checkin.cantidadGrupos === 1 ? 2 : 1
-            try {
-              await onUpdate({ id: checkin._id, cantidadGrupos: next as 1 | 2 })
-              toast.success('Actualizado')
-            } catch (err) {
-              toast.error(err instanceof Error ? err.message : 'Error')
-            }
-          }}
-        >
-          {checkin.cantidadGrupos === 1 ? 'Marcar 2 grupos' : 'Marcar 1 grupo'}
-        </Button>
+      <TableCell className="text-right">
         <ConfirmDeleteDialog
           trigger={<Button size="sm" variant="destructive">Eliminar</Button>}
           title="Eliminar check-in"
