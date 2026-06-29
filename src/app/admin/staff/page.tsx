@@ -44,7 +44,7 @@ export default function StaffAdminPage() {
     <div className="space-y-6">
       <PageHeader
         title="Staff"
-        description="Usuarios con acceso al check-in (operador) o al panel admin"
+        description="Usuarios con acceso al check-in (staff) o al panel admin"
       />
 
       <SectionCard title="Nuevo usuario">

@@ -35,10 +35,10 @@ export default function FacilitadoresAdminPage() {
     try {
       if (editingId) {
         await update({ id: editingId, ...form })
-        toast.success('Operador actualizado')
+        toast.success('Facilitador actualizado')
       } else {
         await create(form)
-        toast.success('Operador creado')
+        toast.success('Facilitador creado')
       }
       setForm({ nombreCompleto: '', documento: '', contacto: '', esposoNombre: '' })
       setEditingId(null)
@@ -50,13 +50,13 @@ export default function FacilitadoresAdminPage() {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Operadores (registro alternativo)"
-        description="Tabla auxiliar de registro — el check-in usa la lista principal de Operadores"
+        title="Facilitadores (registro alternativo)"
+        description="Tabla auxiliar de registro — el check-in usa la lista principal de Facilitadores"
       />
 
       <Input placeholder="Buscar…" value={search} onChange={(e) => setSearch(e.target.value)} className="max-w-sm" />
 
-      <SectionCard title={editingId ? 'Editar operador' : 'Nuevo operador'}>
+      <SectionCard title={editingId ? 'Editar facilitador' : 'Nuevo facilitador'}>
         <form onSubmit={onSave} className="grid gap-4 md:grid-cols-2">
           <div className="space-y-2">
             <Label>Nombre completo</Label>
@@ -88,7 +88,7 @@ export default function FacilitadoresAdminPage() {
       {rows === undefined ? (
         <LoadingState />
       ) : rows.length === 0 ? (
-        <EmptyState title="Sin registros" description="No hay operadores en esta tabla auxiliar." />
+        <EmptyState title="Sin registros" description="No hay facilitadores en esta tabla auxiliar." />
       ) : (
         <div className="overflow-x-auto rounded-xl border">
           <Table>
@@ -110,7 +110,7 @@ export default function FacilitadoresAdminPage() {
                     <Button size="sm" variant="outline" onClick={() => { setEditingId(f._id); setForm({ nombreCompleto: f.nombreCompleto, documento: f.documento, contacto: f.contacto ?? '', esposoNombre: f.esposoNombre ?? '' }) }}>Editar</Button>
                     <ConfirmDeleteDialog
                       trigger={<Button size="sm" variant="destructive">Eliminar</Button>}
-                      title="Eliminar operador"
+                      title="Eliminar facilitador"
                       description={`¿Eliminar a ${f.nombreCompleto}? Esta acción no se puede deshacer.`}
                       onConfirm={async () => {
                         try {

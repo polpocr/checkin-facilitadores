@@ -76,7 +76,7 @@ export const resetAndCreateAdmin = mutation({
       body: {
         email: OPERADOR_EMAIL,
         password: OPERADOR_PASSWORD,
-        name: 'Operador',
+        name: 'Staff check-in',
         role: 'user',
       },
     })
@@ -94,7 +94,7 @@ export const resetAndCreateAdmin = mutation({
     const operadorId = await ctx.db.insert('users', {
       betterAuthUserId: (createdOperador.user as { id: string }).id,
       email: OPERADOR_EMAIL,
-      fullName: 'Operador',
+      fullName: 'Staff check-in',
       role: 'operador',
       active: true,
       createdAt: now,

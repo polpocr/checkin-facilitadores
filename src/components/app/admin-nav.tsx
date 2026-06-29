@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils'
 
 const nav = [
   { href: '/admin', label: 'Dashboard', exact: true },
-  { href: '/admin/personas', label: 'Operadores' },
+  { href: '/admin/personas', label: 'Facilitadores' },
   { href: '/admin/checkins', label: 'Check-ins' },
   { href: '/admin/grupos', label: 'Grupos' },
   { href: '/admin/casos-revision', label: 'Revisión' },

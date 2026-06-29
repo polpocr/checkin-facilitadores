@@ -132,7 +132,7 @@ export default function PersonasAdminPage() {
       const payload = formToPayload(form, !!editingId)
       if (editingId) {
         await update({ id: editingId, ...payload })
-        toast.success('Persona actualizada')
+        toast.success('Facilitador actualizado')
       } else {
         await create({
           ...payload,
@@ -141,7 +141,7 @@ export default function PersonasAdminPage() {
           llevoGrupoConexion: payload.llevoGrupoConexion ?? undefined,
           parejaFalta: payload.parejaFalta ?? undefined,
         })
-        toast.success('Persona creada')
+        toast.success('Facilitador creado')
       }
       setForm(emptyForm())
       setEditingId(null)
@@ -158,8 +158,8 @@ export default function PersonasAdminPage() {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Personas"
-        description="Personas registradas que pueden hacer check-in en el evento"
+        title="Facilitadores"
+        description="Facilitadores registrados que pueden hacer check-in en el evento"
       />
 
       <Input
@@ -169,9 +169,9 @@ export default function PersonasAdminPage() {
         className="max-w-sm"
       />
 
-      <SectionCard title={editingId ? 'Editar persona' : 'Nueva persona'}>
+      <SectionCard title={editingId ? 'Editar facilitador' : 'Nuevo facilitador'}>
         <form onSubmit={onSave} className="grid gap-4 md:grid-cols-2">
-          <p className="text-sm font-medium text-muted-foreground md:col-span-2">Persona</p>
+          <p className="text-sm font-medium text-muted-foreground md:col-span-2">Facilitador</p>
           <div className="space-y-2">
             <Label>Nombre completo</Label>
             <Input
@@ -266,7 +266,7 @@ export default function PersonasAdminPage() {
       {rows === undefined ? (
         <LoadingState />
       ) : rows.length === 0 ? (
-        <EmptyState title="Sin personas" description="Cree el primer registro con el formulario de arriba." />
+        <EmptyState title="Sin facilitadores" description="Cree el primer registro con el formulario de arriba." />
       ) : (
         <div className="overflow-x-auto rounded-xl border">
           <Table>
@@ -325,7 +325,7 @@ export default function PersonasAdminPage() {
                     </Button>
                     <ConfirmDeleteDialog
                       trigger={<Button size="sm" variant="destructive">Eliminar</Button>}
-                      title="Eliminar persona"
+                      title="Eliminar facilitador"
                       description={`¿Eliminar a ${p.nombreCompleto}? Esta acción no se puede deshacer.`}
                       onConfirm={async () => {
                         try {

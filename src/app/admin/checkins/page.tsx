@@ -30,7 +30,8 @@ export default function CheckinsAdminPage() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Operador</TableHead>
+                <TableHead>Facilitador</TableHead>
+                <TableHead>Coord./Fac.</TableHead>
                 <TableHead>Staff</TableHead>
                 <TableHead>Grupos</TableHead>
                 <TableHead>Fecha</TableHead>
@@ -67,6 +68,7 @@ function CheckinRow({
   return (
     <TableRow>
       <TableCell className="font-medium">{detail?.persona?.nombreCompleto ?? checkin.personaId}</TableCell>
+      <TableCell>{detail?.persona?.coordinadorFacilitador ? 'Sí' : '—'}</TableCell>
       <TableCell className="text-muted-foreground">{detail?.operador?.email ?? checkin.operadorId}</TableCell>
       <TableCell className="tabular-nums">{checkin.cantidadGrupos}</TableCell>
       <TableCell>{format(checkin.createdAt, 'PPp', { locale: es })}</TableCell>

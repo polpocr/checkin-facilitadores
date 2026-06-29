@@ -59,7 +59,7 @@ export default function SignInPage() {
       <Card className="w-full max-w-md shadow-sm">
         <CardHeader className="text-center">
           <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Mesa de registro</p>
-          <CardTitle className="text-xl">CheckIn Operadores</CardTitle>
+          <CardTitle className="text-xl">CheckIn Facilitadores</CardTitle>
           <CardDescription>Inicia sesión como staff de check-in o administrador</CardDescription>
         </CardHeader>
         <CardContent>

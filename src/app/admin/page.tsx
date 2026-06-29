@@ -98,7 +98,7 @@ export default function AdminDashboardPage() {
           icon={ClipboardList}
         />
         <KpiCard
-          title="Operadores registrados"
+          title="Facilitadores registrados"
           value={kpis.totalPersonas}
           href="/admin/personas"
           icon={Users}

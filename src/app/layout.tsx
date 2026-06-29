@@ -16,8 +16,8 @@ const jetbrainsMono = JetBrains_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'CheckIn Operadores',
-  description: 'Registro de check-in y grupos para operadores',
+  title: 'CheckIn Facilitadores',
+  description: 'Registro de check-in y grupos para facilitadores',
 }
 
 export default async function RootLayout({

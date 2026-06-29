@@ -28,7 +28,7 @@ export default async function AdminLayout({ children }: PropsWithChildren) {
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <Link href="/admin" className="font-semibold tracking-tight text-foreground hover:text-primary">
-                CheckIn Operadores
+                CheckIn Facilitadores
               </Link>
               <p className="text-xs text-muted-foreground">Admin · {profile.fullName ?? profile.email}</p>
             </div>
