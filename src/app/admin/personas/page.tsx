@@ -12,8 +12,109 @@ import { SectionCard } from '@/components/app/section-card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { toast } from 'sonner'
+
+type SiNoValue = 'si' | 'no' | ''
+
+type PersonaForm = {
+  nombreCompleto: string
+  documento: string
+  contacto: string
+  coordinadorFacilitador: boolean
+  falta: SiNoValue
+  carreraCrecimiento: SiNoValue
+  llevoGrupoConexion: SiNoValue
+  parejaNombre: string
+  parejaDocumento: string
+  parejaContacto: string
+  parejaFalta: SiNoValue
+}
+
+const emptyForm = (): PersonaForm => ({
+  nombreCompleto: '',
+  documento: '',
+  contacto: '',
+  coordinadorFacilitador: false,
+  falta: '',
+  carreraCrecimiento: '',
+  llevoGrupoConexion: '',
+  parejaNombre: '',
+  parejaDocumento: '',
+  parejaContacto: '',
+  parejaFalta: '',
+})
+
+function siNoFromBoolean(value: boolean | undefined): SiNoValue {
+  if (value === true) return 'si'
+  if (value === false) return 'no'
+  return ''
+}
+
+function booleanFromSiNo(value: SiNoValue): boolean | undefined {
+  if (value === 'si') return true
+  if (value === 'no') return false
+  return undefined
+}
+
+function formatSiNo(value: boolean | undefined): string {
+  if (value === true) return 'Sí'
+  if (value === false) return 'No'
+  return '—'
+}
+
+function formToPayload(form: PersonaForm, editing: boolean) {
+  const optionalBoolean = (value: SiNoValue) => {
+    const mapped = booleanFromSiNo(value)
+    if (editing) return mapped === undefined ? null : mapped
+    return mapped
+  }
+
+  return {
+    nombreCompleto: form.nombreCompleto,
+    documento: form.documento,
+    contacto: form.contacto,
+    coordinadorFacilitador: editing
+      ? form.coordinadorFacilitador
+      : form.coordinadorFacilitador || undefined,
+    falta: optionalBoolean(form.falta),
+    carreraCrecimiento: optionalBoolean(form.carreraCrecimiento),
+    llevoGrupoConexion: optionalBoolean(form.llevoGrupoConexion),
+    parejaNombre: form.parejaNombre,
+    parejaDocumento: form.parejaDocumento,
+    parejaContacto: form.parejaContacto,
+    parejaFalta: optionalBoolean(form.parejaFalta),
+  }
+}
+
+function SiNoSelect({
+  id,
+  label,
+  value,
+  onChange,
+}: {
+  id: string
+  label: string
+  value: SiNoValue
+  onChange: (value: SiNoValue) => void
+}) {
+  return (
+    <div className="space-y-2">
+      <Label htmlFor={id}>{label}</Label>
+      <Select value={value || 'unset'} onValueChange={(v) => onChange(v === 'unset' ? '' : (v as SiNoValue))}>
+        <SelectTrigger id={id}>
+          <SelectValue placeholder="—" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="unset">—</SelectItem>
+          <SelectItem value="si">Sí</SelectItem>
+          <SelectItem value="no">No</SelectItem>
+        </SelectContent>
+      </Select>
+    </div>
+  )
+}
 
 export default function PersonasAdminPage() {
   const [search, setSearch] = useState('')
@@ -22,34 +123,27 @@ export default function PersonasAdminPage() {
   const update = useMutation(api.personas.update)
   const remove = useMutation(api.personas.remove)
 
-  const [form, setForm] = useState({
-    nombreCompleto: '',
-    documento: '',
-    contacto: '',
-    parejaNombre: '',
-    parejaDocumento: '',
-    parejaContacto: '',
-  })
+  const [form, setForm] = useState<PersonaForm>(emptyForm)
   const [editingId, setEditingId] = useState<Id<'personas'> | null>(null)
 
   async function onSave(e: React.FormEvent) {
     e.preventDefault()
     try {
+      const payload = formToPayload(form, !!editingId)
       if (editingId) {
-        await update({ id: editingId, ...form })
+        await update({ id: editingId, ...payload })
         toast.success('Persona actualizada')
       } else {
-        await create(form)
+        await create({
+          ...payload,
+          falta: payload.falta ?? undefined,
+          carreraCrecimiento: payload.carreraCrecimiento ?? undefined,
+          llevoGrupoConexion: payload.llevoGrupoConexion ?? undefined,
+          parejaFalta: payload.parejaFalta ?? undefined,
+        })
         toast.success('Persona creada')
       }
-      setForm({
-        nombreCompleto: '',
-        documento: '',
-        contacto: '',
-        parejaNombre: '',
-        parejaDocumento: '',
-        parejaContacto: '',
-      })
+      setForm(emptyForm())
       setEditingId(null)
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Error')
@@ -58,14 +152,7 @@ export default function PersonasAdminPage() {
 
   function cancelEdit() {
     setEditingId(null)
-    setForm({
-      nombreCompleto: '',
-      documento: '',
-      contacto: '',
-      parejaNombre: '',
-      parejaDocumento: '',
-      parejaContacto: '',
-    })
+    setForm(emptyForm())
   }
 
   return (
@@ -84,6 +171,7 @@ export default function PersonasAdminPage() {
 
       <SectionCard title={editingId ? 'Editar persona' : 'Nueva persona'}>
         <form onSubmit={onSave} className="grid gap-4 md:grid-cols-2">
+          <p className="text-sm font-medium text-muted-foreground md:col-span-2">Persona</p>
           <div className="space-y-2">
             <Label>Nombre completo</Label>
             <Input
@@ -104,6 +192,38 @@ export default function PersonasAdminPage() {
             <Label>Contacto</Label>
             <Input value={form.contacto} onChange={(e) => setForm({ ...form, contacto: e.target.value })} />
           </div>
+          <div className="flex items-end gap-2 pb-2">
+            <input
+              id="coordinadorFacilitador"
+              type="checkbox"
+              className="size-4 rounded border"
+              checked={form.coordinadorFacilitador}
+              onChange={(e) => setForm({ ...form, coordinadorFacilitador: e.target.checked })}
+            />
+            <Label htmlFor="coordinadorFacilitador" className="cursor-pointer font-normal">
+              Coordinador/Facilitador
+            </Label>
+          </div>
+          <SiNoSelect
+            id="falta"
+            label="Falta"
+            value={form.falta}
+            onChange={(falta) => setForm({ ...form, falta })}
+          />
+          <SiNoSelect
+            id="carreraCrecimiento"
+            label="Carrera crecimiento"
+            value={form.carreraCrecimiento}
+            onChange={(carreraCrecimiento) => setForm({ ...form, carreraCrecimiento })}
+          />
+          <SiNoSelect
+            id="llevoGrupoConexion"
+            label="Grupo Conexión"
+            value={form.llevoGrupoConexion}
+            onChange={(llevoGrupoConexion) => setForm({ ...form, llevoGrupoConexion })}
+          />
+
+          <p className="text-sm font-medium text-muted-foreground md:col-span-2">Pareja</p>
           <div className="space-y-2">
             <Label>Pareja (sugerencia)</Label>
             <Input
@@ -125,6 +245,13 @@ export default function PersonasAdminPage() {
               onChange={(e) => setForm({ ...form, parejaContacto: e.target.value })}
             />
           </div>
+          <SiNoSelect
+            id="parejaFalta"
+            label="Falta (pareja)"
+            value={form.parejaFalta}
+            onChange={(parejaFalta) => setForm({ ...form, parejaFalta })}
+          />
+
           <div className="flex gap-2 md:col-span-2">
             <Button type="submit">{editingId ? 'Actualizar' : 'Crear'}</Button>
             {editingId && (
@@ -148,9 +275,14 @@ export default function PersonasAdminPage() {
                 <TableHead>Nombre</TableHead>
                 <TableHead>Documento</TableHead>
                 <TableHead>Contacto</TableHead>
+                <TableHead>Coord./Fac.</TableHead>
+                <TableHead>Falta</TableHead>
+                <TableHead>Carrera</TableHead>
+                <TableHead>G. Conexión</TableHead>
                 <TableHead>Pareja</TableHead>
                 <TableHead>Cédula pareja</TableHead>
                 <TableHead>Número pareja</TableHead>
+                <TableHead>Falta pareja</TableHead>
                 <TableHead className="text-right">Acciones</TableHead>
               </TableRow>
             </TableHeader>
@@ -160,9 +292,14 @@ export default function PersonasAdminPage() {
                   <TableCell className="font-medium">{p.nombreCompleto}</TableCell>
                   <TableCell>{p.documento}</TableCell>
                   <TableCell>{p.contacto ?? '—'}</TableCell>
+                  <TableCell>{p.coordinadorFacilitador ? 'Sí' : '—'}</TableCell>
+                  <TableCell>{formatSiNo(p.falta)}</TableCell>
+                  <TableCell>{formatSiNo(p.carreraCrecimiento)}</TableCell>
+                  <TableCell>{formatSiNo(p.llevoGrupoConexion)}</TableCell>
                   <TableCell>{p.parejaNombre ?? '—'}</TableCell>
                   <TableCell>{p.parejaDocumento ?? '—'}</TableCell>
                   <TableCell>{p.parejaContacto ?? '—'}</TableCell>
+                  <TableCell>{formatSiNo(p.parejaFalta)}</TableCell>
                   <TableCell className="space-x-2 text-right">
                     <Button
                       size="sm"
@@ -173,9 +310,14 @@ export default function PersonasAdminPage() {
                           nombreCompleto: p.nombreCompleto,
                           documento: p.documento,
                           contacto: p.contacto ?? '',
+                          coordinadorFacilitador: p.coordinadorFacilitador ?? false,
+                          falta: siNoFromBoolean(p.falta),
+                          carreraCrecimiento: siNoFromBoolean(p.carreraCrecimiento),
+                          llevoGrupoConexion: siNoFromBoolean(p.llevoGrupoConexion),
                           parejaNombre: p.parejaNombre ?? '',
                           parejaDocumento: p.parejaDocumento ?? '',
                           parejaContacto: p.parejaContacto ?? '',
+                          parejaFalta: siNoFromBoolean(p.parejaFalta),
                         })
                       }}
                     >

@@ -4,12 +4,23 @@ import { requireAdmin } from './lib/authorization'
 import { findEffectiveCheckin } from './lib/checkinPair'
 import { resolveGrupoNombre } from './lib/grupoProvisionalName'
 
+function formatOptionalBoolean(value: boolean | undefined): string {
+  if (value === true) return 'Sí'
+  if (value === false) return 'No'
+  return ''
+}
+
 const exportRowValidator = v.object({
   nombreCompleto: v.string(),
   documento: v.string(),
   contacto: v.string(),
+  coordinadorFacilitador: v.string(),
+  falta: v.string(),
+  carreraCrecimiento: v.string(),
+  llevoGrupoConexion: v.string(),
   parejaNombre: v.string(),
   parejaVinculada: v.string(),
+  parejaFalta: v.string(),
   tieneCheckin: v.boolean(),
   checkinViaPareja: v.boolean(),
   checkinViaPersonaNombre: v.string(),
@@ -96,8 +107,13 @@ export const personasYGrupos = query({
         nombreCompleto: persona.nombreCompleto,
         documento: persona.documento,
         contacto: persona.contacto ?? '',
+        coordinadorFacilitador: formatOptionalBoolean(persona.coordinadorFacilitador),
+        falta: formatOptionalBoolean(persona.falta),
+        carreraCrecimiento: formatOptionalBoolean(persona.carreraCrecimiento),
+        llevoGrupoConexion: formatOptionalBoolean(persona.llevoGrupoConexion),
         parejaNombre: persona.parejaNombre ?? '',
         parejaVinculada: pareja?.nombreCompleto ?? '',
+        parejaFalta: formatOptionalBoolean(persona.parejaFalta),
         tieneCheckin: !!effective,
         checkinViaPareja,
         checkinViaPersonaNombre,

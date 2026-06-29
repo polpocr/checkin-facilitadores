@@ -126,9 +126,14 @@ export const create = mutation({
     nombreCompleto: v.string(),
     documento: v.string(),
     contacto: v.optional(v.string()),
+    coordinadorFacilitador: v.optional(v.boolean()),
+    falta: v.optional(v.boolean()),
+    carreraCrecimiento: v.optional(v.boolean()),
+    llevoGrupoConexion: v.optional(v.boolean()),
     parejaNombre: v.optional(v.string()),
     parejaDocumento: v.optional(v.string()),
     parejaContacto: v.optional(v.string()),
+    parejaFalta: v.optional(v.boolean()),
     parejaPersonaId: v.optional(v.id('personas')),
   },
   handler: async (ctx, args) => {
@@ -145,9 +150,14 @@ export const create = mutation({
       nombreCompleto: args.nombreCompleto.trim(),
       documento,
       contacto: args.contacto?.trim() || undefined,
+      coordinadorFacilitador: args.coordinadorFacilitador,
+      falta: args.falta,
+      carreraCrecimiento: args.carreraCrecimiento,
+      llevoGrupoConexion: args.llevoGrupoConexion,
       parejaNombre: args.parejaNombre?.trim() || undefined,
       parejaDocumento: args.parejaDocumento?.trim() || undefined,
       parejaContacto: args.parejaContacto?.trim() || undefined,
+      parejaFalta: args.parejaFalta,
       parejaPersonaId: args.parejaPersonaId,
       createdAt: now,
       updatedAt: now,
@@ -167,9 +177,14 @@ export const update = mutation({
     nombreCompleto: v.optional(v.string()),
     documento: v.optional(v.string()),
     contacto: v.optional(v.string()),
+    coordinadorFacilitador: v.optional(v.boolean()),
+    falta: v.optional(v.union(v.boolean(), v.null())),
+    carreraCrecimiento: v.optional(v.union(v.boolean(), v.null())),
+    llevoGrupoConexion: v.optional(v.union(v.boolean(), v.null())),
     parejaNombre: v.optional(v.string()),
     parejaDocumento: v.optional(v.string()),
     parejaContacto: v.optional(v.string()),
+    parejaFalta: v.optional(v.union(v.boolean(), v.null())),
     parejaPersonaId: v.optional(v.union(v.id('personas'), v.null())),
   },
   handler: async (ctx, args) => {
@@ -202,6 +217,16 @@ export const update = mutation({
         : {}),
       ...(args.documento !== undefined ? { documento: normalizeDocumento(args.documento) } : {}),
       ...(args.contacto !== undefined ? { contacto: args.contacto.trim() || undefined } : {}),
+      ...(args.coordinadorFacilitador !== undefined
+        ? { coordinadorFacilitador: args.coordinadorFacilitador || undefined }
+        : {}),
+      ...(args.falta !== undefined ? { falta: args.falta === null ? undefined : args.falta } : {}),
+      ...(args.carreraCrecimiento !== undefined
+        ? { carreraCrecimiento: args.carreraCrecimiento === null ? undefined : args.carreraCrecimiento }
+        : {}),
+      ...(args.llevoGrupoConexion !== undefined
+        ? { llevoGrupoConexion: args.llevoGrupoConexion === null ? undefined : args.llevoGrupoConexion }
+        : {}),
       ...(args.parejaNombre !== undefined
         ? { parejaNombre: args.parejaNombre.trim() || undefined }
         : {}),
@@ -210,6 +235,9 @@ export const update = mutation({
         : {}),
       ...(args.parejaContacto !== undefined
         ? { parejaContacto: args.parejaContacto.trim() || undefined }
+        : {}),
+      ...(args.parejaFalta !== undefined
+        ? { parejaFalta: args.parejaFalta === null ? undefined : args.parejaFalta }
         : {}),
       ...(args.parejaPersonaId !== undefined
         ? {
