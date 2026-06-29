@@ -1,0 +1,95 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e4]:
+        - generic [ref=e5]:
+          - generic [ref=e6]:
+            - link "CheckIn Operadores" [ref=e7] [cursor=pointer]:
+              - /url: /admin
+            - paragraph [ref=e8]: Admin · Admin
+          - generic [ref=e9]:
+            - button "Exportar CSV" [ref=e10]:
+              - img
+              - text: Exportar CSV
+            - button "Cerrar sesión" [ref=e11]
+        - navigation [ref=e13]:
+          - button "Dashboard" [ref=e14] [cursor=pointer]
+          - button "Operadores" [ref=e15] [cursor=pointer]
+          - button "Check-ins" [ref=e16] [cursor=pointer]
+          - button "Grupos" [ref=e17] [cursor=pointer]
+          - button "Revisión" [ref=e18] [cursor=pointer]
+          - button "Staff" [ref=e19] [cursor=pointer]
+    - main [ref=e20]:
+      - generic [ref=e21]:
+        - generic [ref=e23]:
+          - heading "Dashboard" [level=1] [ref=e24]
+          - paragraph [ref=e25]: Monitoreo en tiempo real del registro y grupos del evento
+        - generic [ref=e26]:
+          - link "Check-ins realizados 1 1% del total" [ref=e27] [cursor=pointer]:
+            - /url: /admin/checkins
+            - generic [ref=e29]:
+              - img [ref=e31]
+              - generic [ref=e34]:
+                - paragraph [ref=e35]: Check-ins realizados
+                - paragraph [ref=e36]: "1"
+                - paragraph [ref=e37]: 1% del total
+          - link "Sin check-in 233" [ref=e38] [cursor=pointer]:
+            - /url: /admin/checkins
+            - generic [ref=e40]:
+              - img [ref=e42]
+              - generic [ref=e44]:
+                - paragraph [ref=e45]: Sin check-in
+                - paragraph [ref=e46]: "233"
+          - link "Casos pendientes 0" [ref=e47] [cursor=pointer]:
+            - /url: /admin/casos-revision?estado=pendiente
+            - generic [ref=e49]:
+              - img [ref=e51]
+              - generic [ref=e54]:
+                - paragraph [ref=e55]: Casos pendientes
+                - paragraph [ref=e56]: "0"
+          - link "Operadores registrados 235" [ref=e57] [cursor=pointer]:
+            - /url: /admin/personas
+            - generic [ref=e59]:
+              - img [ref=e61]
+              - generic [ref=e66]:
+                - paragraph [ref=e67]: Operadores registrados
+                - paragraph [ref=e68]: "235"
+        - generic [ref=e69]:
+          - link "Grupos creados 2" [ref=e70] [cursor=pointer]:
+            - /url: /admin/grupos
+            - generic [ref=e72]:
+              - img [ref=e74]
+              - generic [ref=e79]:
+                - paragraph [ref=e80]: Grupos creados
+                - paragraph [ref=e81]: "2"
+          - link "Desglose grupos 0 / 1 1 grupo / 2 grupos" [ref=e82] [cursor=pointer]:
+            - /url: /admin/grupos
+            - generic [ref=e84]:
+              - img [ref=e86]
+              - generic [ref=e91]:
+                - paragraph [ref=e92]: Desglose grupos
+                - paragraph [ref=e93]: 0 / 1
+                - paragraph [ref=e94]: 1 grupo / 2 grupos
+          - link "Integrantes capturados 2 Promedio 1 por grupo" [ref=e95] [cursor=pointer]:
+            - /url: /admin/grupos
+            - generic [ref=e97]:
+              - img [ref=e99]
+              - generic [ref=e104]:
+                - paragraph [ref=e105]: Integrantes capturados
+                - paragraph [ref=e106]: "2"
+                - paragraph [ref=e107]: Promedio 1 por grupo
+        - generic [ref=e108]:
+          - generic [ref=e109]:
+            - generic [ref=e111]: Check-ins por staff
+            - generic [ref=e114]:
+              - generic [ref=e115]: js77tmcw…
+              - generic [ref=e116]: "1"
+          - generic [ref=e117]:
+            - generic [ref=e119]: Check-ins por hora
+            - generic [ref=e122]:
+              - generic [ref=e123]: 2026-06-29 22:00
+              - generic [ref=e124]: "1"
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=e130] [cursor=pointer]:
+    - img [ref=e131]
+  - alert [ref=e134]

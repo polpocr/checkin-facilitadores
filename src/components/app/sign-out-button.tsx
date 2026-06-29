@@ -1,6 +1,5 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
 import { authClient } from '@/lib/auth-client'
 import { Button } from '@/components/ui/button'
 
@@ -15,8 +14,6 @@ export function SignOutButton({
   signInPath?: string
   className?: string
 }) {
-  const router = useRouter()
-
   return (
     <Button
       variant={variant}
@@ -24,7 +21,7 @@ export function SignOutButton({
       className={className}
       onClick={async () => {
         await authClient.signOut()
-        router.replace(signInPath)
+        window.location.assign(signInPath)
       }}
     >
       Cerrar sesión

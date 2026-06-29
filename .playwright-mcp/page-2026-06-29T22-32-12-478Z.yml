@@ -1,0 +1,18 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e136]:
+    - generic [ref=e137]:
+      - paragraph [ref=e138]: Mesa de registro
+      - generic [ref=e139]: CheckIn Operadores
+      - generic [ref=e140]: Inicia sesión como staff de check-in o administrador
+    - generic [ref=e142]:
+      - generic [ref=e143]:
+        - generic [ref=e144]: Email
+        - textbox "Email" [ref=e145]
+      - generic [ref=e146]:
+        - generic [ref=e147]: Contraseña
+        - textbox "Contraseña" [ref=e148]
+      - button "Entrar" [ref=e149]
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=e130] [cursor=pointer]:
+    - img [ref=e131]
+  - alert [ref=e134]

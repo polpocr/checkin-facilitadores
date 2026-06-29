@@ -1,0 +1,52 @@
+[     725ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3000/_next/static/chunks/0k5d_next_dist_1qmvpb9._.js:2477
+[     819ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/0k5d_next_dist_1qmvpb9._.js:2477
+[   10200ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3000/_next/static/chunks/0k5d_next_dist_1qmvpb9._.js:2477
+[   10217ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/0k5d_next_dist_1qmvpb9._.js:2477
+[   10339ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0k5d_next_dist_1qmvpb9._.js:2477
+[   10364ms] [LOG] [Fast Refresh] done in 125ms @ http://localhost:3000/_next/static/chunks/0k5d_next_dist_1qmvpb9._.js:2477
+[   17142ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:3000/api/auth/convex/token:0
+[   58163ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0k5d_next_dist_1qmvpb9._.js:2477
+[   59274ms] [LOG] [Fast Refresh] done in 1166ms @ http://localhost:3000/_next/static/chunks/0k5d_next_dist_1qmvpb9._.js:2477
+[   81815ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3000/_next/static/chunks/0k5d_next_dist_1qmvpb9._.js:2477
+[   81837ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/0k5d_next_dist_1qmvpb9._.js:2477
+[   88779ms] ConvexError: [CONVEX Q(dashboard:getKpis)] [Request ID: 80039194e931d0e7] Server Error
+Uncaught ConvexError: Not authenticated
+    at getAuthenticatedUser (../../convex/lib/authorization.ts:33:9)
+    at async requireAdmin (../../convex/lib/authorization.ts:38:11)
+    at async handler (../convex/dashboard.ts:19:4)
+
+  Called by client
+    at getAuthenticatedUser (../../convex/lib/authorization.ts:33:9)
+    at async requireAdmin (../../convex/lib/authorization.ts:38:11)
+    at async handler (../convex/dashboard.ts:19:4)
+
+  Called by client
+    at OptimisticQueryResults.queryResult (http://localhost:3000/_next/static/chunks/node_modules__pnpm_028r_2g._.js:4913:284)
+    at BaseConvexClient.localQueryResult (http://localhost:3000/_next/static/chunks/node_modules__pnpm_028r_2g._.js:6783:44)
+    at Object.localQueryResult (http://localhost:3000/_next/static/chunks/node_modules__pnpm_028r_2g._.js:8542:44)
+    at QueriesObserver.getLocalResults (http://localhost:3000/_next/static/chunks/node_modules__pnpm_028r_2g._.js:8961:31)
+    at useQueriesHelper.useMemo[subscription] (http://localhost:3000/_next/static/chunks/node_modules__pnpm_028r_2g._.js:9093:41)
+    at useSubscription.useEffect.checkForUpdates (http://localhost:3000/_next/static/chunks/node_modules__pnpm_028r_2g._.js:8288:43)
+    at basicStateReducer (http://localhost:3000/_next/static/chunks/0k5d_next_dist_compiled_react-dom_1ep3e0o._.js:4797:47)
+    at updateReducerImpl (http://localhost:3000/_next/static/chunks/0k5d_next_dist_compiled_react-dom_1ep3e0o._.js:4879:79)
+    at updateReducer (http://localhost:3000/_next/static/chunks/0k5d_next_dist_compiled_react-dom_1ep3e0o._.js:4829:16)
+    at Object.useState (http://localhost:3000/_next/static/chunks/0k5d_next_dist_compiled_react-dom_1ep3e0o._.js:15492:24)
+    at exports.useState (http://localhost:3000/_next/static/chunks/0k5d_next_dist_compiled_1-s7kk0._.js:1754:36)
+    at useSubscription (http://localhost:3000/_next/static/chunks/node_modules__pnpm_028r_2g._.js:8259:366)
+    at useQueriesHelper (http://localhost:3000/_next/static/chunks/node_modules__pnpm_028r_2g._.js:9107:275)
+    at useQueries (http://localhost:3000/_next/static/chunks/node_modules__pnpm_028r_2g._.js:9073:12)
+    at useQuery (http://localhost:3000/_next/static/chunks/node_modules__pnpm_028r_2g._.js:8779:274)
+    at AdminDashboardPage (http://localhost:3000/_next/static/chunks/_1rf5uvx._.js:410:264)
+    at Object.react_stack_bottom_frame (http://localhost:3000/_next/static/chunks/0k5d_next_dist_compiled_react-dom_1ep3e0o._.js:15037:24)
+    at renderWithHooks (http://localhost:3000/_next/static/chunks/0k5d_next_dist_compiled_react-dom_1ep3e0o._.js:4620:24)
+    at updateFunctionComponent (http://localhost:3000/_next/static/chunks/0k5d_next_dist_compiled_react-dom_1ep3e0o._.js:6081:21)
+    at beginWork (http://localhost:3000/_next/static/chunks/0k5d_next_dist_compiled_react-dom_1ep3e0o._.js:6691:24)
+    at runWithFiberInDEV (http://localhost:3000/_next/static/chunks/0k5d_next_dist_compiled_react-dom_1ep3e0o._.js:965:74)
+    at performUnitOfWork (http://localhost:3000/_next/static/chunks/0k5d_next_dist_compiled_react-dom_1ep3e0o._.js:9555:97)
+    at workLoopSync (http://localhost:3000/_next/static/chunks/0k5d_next_dist_compiled_react-dom_1ep3e0o._.js:9449:40)
+    at renderRootSync (http://localhost:3000/_next/static/chunks/0k5d_next_dist_compiled_react-dom_1ep3e0o._.js:9433:13)
+    at performWorkOnRoot (http://localhost:3000/_next/static/chunks/0k5d_next_dist_compiled_react-dom_1ep3e0o._.js:9098:47)
+    at performWorkOnRootViaSchedulerTask (http://localhost:3000/_next/static/chunks/0k5d_next_dist_compiled_react-dom_1ep3e0o._.js:10255:9)
+    at MessagePort.performWorkUntilDeadline (http://localhost:3000/_next/static/chunks/0k5d_next_dist_compiled_1-s7kk0._.js:2647:64)
+[   88887ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3000/_next/static/chunks/0k5d_next_dist_1qmvpb9._.js:2477
+[   88905ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/0k5d_next_dist_1qmvpb9._.js:2477
