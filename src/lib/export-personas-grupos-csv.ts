@@ -7,7 +7,7 @@ const COLUMNS: { key: keyof ExportRow; header: string }[] = [
   { key: 'nombreCompleto', header: 'Nombre completo' },
   { key: 'documento', header: 'Documento' },
   { key: 'contacto', header: 'Contacto' },
-  { key: 'coordinadorFacilitador', header: 'Coordinador/Facilitador' },
+  { key: 'coordinadorFacilitador', header: 'Coordinador' },
   { key: 'falta', header: 'Falta' },
   { key: 'carreraCrecimiento', header: 'Carrera crecimiento' },
   { key: 'llevoGrupoConexion', header: 'Grupo Conexión' },

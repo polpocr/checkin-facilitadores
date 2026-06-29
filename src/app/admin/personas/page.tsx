@@ -85,6 +85,12 @@ function formToPayload(form: PersonaForm, editing: boolean) {
   }
 }
 
+function siNoLabel(value: SiNoValue): string {
+  if (value === 'si') return 'Sí'
+  if (value === 'no') return 'No'
+  return 'No seleccionado'
+}
+
 function SiNoSelect({
   id,
   label,
@@ -100,11 +106,11 @@ function SiNoSelect({
     <div className="space-y-2">
       <Label htmlFor={id}>{label}</Label>
       <Select value={value || 'unset'} onValueChange={(v) => onChange(v === 'unset' ? '' : (v as SiNoValue))}>
-        <SelectTrigger id={id}>
-          <SelectValue placeholder="—" />
+        <SelectTrigger id={id} className="w-full">
+          <SelectValue>{siNoLabel(value)}</SelectValue>
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="unset">—</SelectItem>
+          <SelectItem value="unset">No seleccionado</SelectItem>
           <SelectItem value="si">Sí</SelectItem>
           <SelectItem value="no">No</SelectItem>
         </SelectContent>
@@ -197,7 +203,7 @@ export default function PersonasAdminPage() {
               onChange={(e) => setForm({ ...form, coordinadorFacilitador: e.target.checked })}
             />
             <Label htmlFor="coordinadorFacilitador" className="cursor-pointer font-normal">
-              Coordinador/Facilitador
+              Coordinador
             </Label>
           </div>
           <SiNoSelect
@@ -265,7 +271,7 @@ export default function PersonasAdminPage() {
                 <TableHead>Nombre</TableHead>
                 <TableHead>Documento</TableHead>
                 <TableHead>Contacto</TableHead>
-                <TableHead>Coord./Fac.</TableHead>
+                <TableHead>Coordinador</TableHead>
                 <TableHead>Carrera</TableHead>
                 <TableHead>G. Conexión</TableHead>
                 <TableHead>Pareja</TableHead>

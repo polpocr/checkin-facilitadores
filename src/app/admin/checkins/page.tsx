@@ -31,7 +31,7 @@ export default function CheckinsAdminPage() {
             <TableHeader>
               <TableRow>
                 <TableHead>Facilitador</TableHead>
-                <TableHead>Coord./Fac.</TableHead>
+                <TableHead>Coordinador</TableHead>
                 <TableHead>Staff</TableHead>
                 <TableHead>Grupos</TableHead>
                 <TableHead>Fecha</TableHead>
